@@ -1,0 +1,55 @@
+body {
+    background: white;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+}
+
+h1 {
+    color: black;
+    font-size: 45px;
+}
+
+p {
+    font-size: 15px;
+    color: black;
+}
+
+a {
+    font-size: 15px
+}
+
+button[type=submit] {
+    background-color: #1d6bd0;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.form-control {
+    border: 1px solid #bdbdbd;
+    border-radius: 4px;
+    padding: 8px 10px;
+}
+
+.form-control:focus {
+    border: 2px solid #4d4d4d;
+    border-radius: 4px;
+}
+
+.form-group {
+    float: left;
+    clear: left;
+    padding-top: 5px;
+}
+
+.error-group {
+    background-color: #ffe5e5;
+    font-size: 18px;
+    float: left;
+    clear: left;
+    padding: 12px 22px;
+    border-radius: 8px;
+    color: #bf0000;
+}
