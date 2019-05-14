@@ -4,11 +4,12 @@ const usersData = require("../data");
 const uuid = require("node-uuid");
 
 router.get("/", async (req, res) => {
-    if (await authTest(req) === true) {
-      res.redirect("/profile");
-    }
-    else {
-      res.render("login");
-    }
-    //res.render("login");
+    res.render("frontpage");
 });
+
+// POST sign in
+// POST signup
+// GET logout
+// GET person signed in profile (
+// PUT update profile info (password, username, etc.)
+// GET someone's public profile
