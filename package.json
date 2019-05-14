@@ -1,0 +1,19 @@
+{
+  "name": "final_project",
+  "version": "1.0.0",
+  "description": "A forum used for playing mafia.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KyleBernardes/cs546-final.git"
+  },
+  "author": "Kyle Bernardes, Ethan Jones, Joseph Kuhn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KyleBernardes/cs546-final/issues"
+  },
+  "homepage": "https://github.com/KyleBernardes/cs546-final#readme"
+}
