@@ -3,8 +3,6 @@ const mongo = require("mongodb");
 const mongoCollections = require("./collections");
 const users = mongoCollections.users;
 
-const userList = [];
-
 async function createUser(username, password, email, firstName, lastName)
 {
     if (!username || typeof username != "string")
