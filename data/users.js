@@ -1,7 +1,58 @@
 const bcrypt = require("bcrypt");
+const mongo = require("mongodb");
+const mongoCollections = require("./collections");
+const users = mongoCollections.users;
 
 const userList = [];
 
+async function createUser(username, password, email, firstName, lastName)
+{
+    if (!username || typeof username != "string")
+    {
+        throw "You must provide a username.";
+    }
+    if (!password || typeof password != "string")
+    {
+        throw "You must provide a password.";
+    }
+    if (!email || typeof email != "string")
+    {
+        throw "You must provide an email.";
+    }
+    if (!firstName || typeof firstName != "string")
+    {
+        throw "You must provide a first name.";
+    }
+    if (!lastName || typeof lastName != "string")
+    {
+        throw "You must provide a last name.";
+    }
+
+    const userCollection = await users();
+
+    let newUser = {
+        username: username,
+        password: password,
+        email: email,
+        firstName, firstName,
+        lastName, lastName,
+        _id: uuid.v4()
+    };
+
+    return userCollection.insertOne(newUser).then(newInsertInformation => 
+        {
+            return newInsertInformation.insertedId;
+        })
+        .then(newId => {
+            return this.get(newId);
+        });
+
+    /*const insertInfo = await userCollection.insertOne(newUser);
+    if (insertInfo.insertedCount === 0)
+    {
+        throw "Could not add user.";
+    }*/
+}
 
 async function findUser(username) {
     if (!username || typeof username != "string")
