@@ -286,5 +286,6 @@ module.exports = {
     changeUsername,
     changeFirstName,
     changeLastName,
-    changePassword
+    changePassword,
+    createUser
 };
