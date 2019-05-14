@@ -1,0 +1,35 @@
+<head>
+    <meta charset="utf-8">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <main>
+        <h1>Enter the following</h1>
+        <form id="login-form" action="/login" method="POST">
+            <div class="form-group">
+                <input type="text" id="username" class="form-control" placeholder="Username" name="username" required>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="name" id="name" class="form-control" placeholder="Name" name="name" required>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="email" id="email" class="form-control" placeholder="Email" name="email" required>
+            </div>
+            <br>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </main>
+    {{error}}
+    <br>
+    <a href="/login">Already have an account?</a>
+    </br>
+</body>
