@@ -1,0 +1,13 @@
+<head>
+    <meta charset="utf-8">
+    <title>{{thread.title}}</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    {{#list nav}}
+        <a href="/newcomment">{{thread.post.title}}</a>
+        <h1>{{thread.post.poster.username}}</h1>
+        <h2>{{thread.post.poster.wins}}</h2>
+        <p>{{thread.post.body}}</p>
+    {{/list}}
+</body>
