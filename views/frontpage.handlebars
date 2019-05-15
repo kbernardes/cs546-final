@@ -1,0 +1,13 @@
+<head>
+    <meta charset="utf-8">
+    <title>Mafia Forum</title>
+    <a href="/infochange">{{user.username}}</a>
+    <link rel="stylesheet" href="/css/frontpage.css">
+</head>
+<body>
+    {{#list nav}}
+        <a href="/thread">{{thread.title}}</a>
+        <h1>{{thread.poster.username}}</h1>
+        <h2>{{thread.poster.wins}}</h2>
+    {{/list}}
+</body>

@@ -1,0 +1,27 @@
+<body>
+<article class="new-information">
+  <h1>Update your information</h1>
+  <form  id="updateinfo-form" action="/infochange" method="POST">
+        <p>Username: {{user.username}} </p>
+        <p>Wins: {{user.wins}}</p>
+    <div class="form-group">
+        <Input type="text" id="username" name="newusername" placeholder="new username?" class="form-control">
+    </div>
+        <p>Password: {{ user.password }}</p>
+    <div class="form-group">
+        <Input type="text" id="password" name="newpassword" placeholder="new password?" class="form-control">
+    </div>
+        <p>Name: {{user.name}}</p>
+    <div class="form-group">
+        <Input type="text" id="name" name="newname" placeholder="new name?" class="form-control">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</article>
+    <br>
+    {{error}}
+    </br>
+    <a href="/frontpage">back to front page</a>
+    </br>
+</body>

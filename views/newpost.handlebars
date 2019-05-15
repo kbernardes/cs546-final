@@ -3,17 +3,20 @@
   <form action="/posts" method="POST" class="new-post-form">
     <label>
       Post Title
-      <input type="text" name="title" placeholder="Post Title" value="{{post.title}}" class="full-width-input"/>
+      <input type="text" name="title" placeholder="Post Title" value="{{post.title}}" class="full-width-input" required/>
     </label>
+    <br>
+    <br>
     <label for="post-body">
       Post Body
     </label>
-    <textarea id="post-body" name="body" rows="4" placeholder="Post Content" class="full-width-input">{{post.body}}</textarea>
-
-    <label for="poster">
+    <br>
+    <textarea id="post-body" name="body" rows="4" placeholder="Post Content" class="full-width-input" required>{{post.body}}</textarea>
+    <br>
+    <!--<label for="poster">
       Poster
     </label>
-    <!--<select class="full-width-input" name="posterId">
+    <select class="full-width-input" name="posterId">
       <option value="">Select User...</option>
       <option value="ee9c1ebb-a589-4075-a9a9-e6ee38145f67">Phil</option>
     </select>
@@ -34,7 +37,6 @@
   </label></div>-->
     <button type="submit">Create New Post</button>
     <button type="reset">Clear Form</button>
-    <button type="button">Click me!</button>
   </form>
   {{#if hasErrors}}
   <ul class="error-list">
