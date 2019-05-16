@@ -1,0 +1,17 @@
+<head>
+    <meta charset="utf-8">
+    <title>{{user.username}}</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <br>
+        <h1>{{user.name}}</h1>
+        <h2>{{user.wins}}</h2>
+    </br>
+        {{#list nav}}
+            <a href="/thread">{{user.thread.title}}</a>
+        {{/list}}
+        <br>
+    <a href="/frontpage">back to front page</a>
+    </br>
+</body>

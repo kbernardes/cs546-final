@@ -34,7 +34,8 @@ async function createUser(username, password, email, firstName, lastName)
         email: email,
         firstName, firstName,
         lastName, lastName,
-        _id: uuid.v4()
+        _id: uuid.v4(),
+        sessionID: undefined
     };
 
     return userCollection.insertOne(newUser).then(newInsertInformation => 
@@ -103,6 +104,23 @@ async function getUserById(id)
             throw "No user exists with that id."
         }
         return user;
+}
+
+async function userSID(sessionID)
+{
+        if (!sessionID || typeof sessionID != "string")
+        {
+            throw "You must provide a username."
+        }
+        const userList = await users();
+        for (let x = 0; x < userList.length; x++)
+        {
+            if (userList[x].sessionID === sessionID)
+            {
+                return userList[x];
+            }
+        }
+        throw "The user could not be found.";
 }
 
 async function deleteUser(id)
@@ -280,6 +298,7 @@ module.exports = {
     getAllPosts,
     getAllThreads,
     getUserById,
+    userSID,
     deleteUser,
     changeUsername,
     changeFirstName,
