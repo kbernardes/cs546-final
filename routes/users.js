@@ -53,7 +53,7 @@ router.post("/signup", async (req, res) => {
         const user = await data.users.createUser(username, password, email, firstName, lastName);
         req.session.sessionID = uuid.v4();
         user.sessionID = req.session.sessionID;
-        res.redirect("/users");
+        res.redirect("/forums");
     }
     else{
         res.status(402).render("error", {information: "Username already taken, please try a different name"});
