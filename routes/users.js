@@ -94,7 +94,7 @@ router.put("/profile/:username", async (req, res) => {
   }
 
   try {
-      if(userInfo.username != Null)
+      if(userInfo.username != null)
         await data.users.changeUsername({_id: theUser._id}, userInfo.username);  
   } catch (e) {
       res.status(400).json({ error: "That name that is already taken. Please try something else." });
@@ -108,21 +108,21 @@ router.put("/profile/:username", async (req, res) => {
   }*/
 
   try {
-    if(userInfo.password != Null)
+    if(userInfo.password != null)
         await data.users.changePassword({_id: theUser._id}, userInfo.password);
 } catch (e) {
     res.status(400).json({ error: "You entered an invalid password. Please try something else." });
 }
 
 try {
-    if(userInfo.firstName != Null)
+    if(userInfo.firstName != null)
         await data.users.changeFirstName({_id: theUser._id}, userInfo.firstName);
 } catch (e) {
     res.status(400).json({ error: "You entered an invalid first name. Please try something else." });
 }
 
 try {
-    if(userInfo.lastName != Null)
+    if(userInfo.lastName != null)
         await data.users.changeLastName({_id: theUser._id}, userInfo.lastName);
 } catch (e) {
     res.status(400).json({ error: "You entered an invalid last name. Please try something else." });
