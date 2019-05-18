@@ -81,12 +81,17 @@ async function getThreadsByUser(username) { // maybe use user ID instead of name
 async function getThreadsByForum(forum) { // maybe use user ID instead of name? not sure if it matters
     if (!forum)
     {
+        console.log("1");
         throw "You must provide a forum to search for."
     }
+    console.log("2");
     const threadCollection = await threads();
+    console.log("3");
     const threads = await threadCollection.find({ foum: String(forum) }).toArray();
+    console.log("4");
     if (threads === null)
     {
+        console.log("5");
         throw "No threads exist by that user."
     }
     return threads;
