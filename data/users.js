@@ -32,8 +32,8 @@ async function createUser(username, password, email, firstName, lastName)
         username: username,
         password: password,
         email: email,
-        firstName, firstName,
-        lastName, lastName,
+        firstName: firstName,
+        lastName: lastName,
         _id: uuid.v4(),
         sessionID: undefined
     };
