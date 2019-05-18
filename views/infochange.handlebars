@@ -11,10 +11,16 @@
     <div class="form-group">
         <Input type="text" id="password" name="newpassword" placeholder="new password?" class="form-control">
     </div>
-        <p>Name: {{user.name}}</p>
+        <p>Name: {{user.firstName}} {{user.lastName}}</p>
+    <br>
     <div class="form-group">
-        <Input type="text" id="name" name="newname" placeholder="new name?" class="form-control">
+        <input type="firstName" id="firstName" class="form-control" placeholder="new first name?" name="firstName" required>
     </div>
+    <br>
+    <div class="form-group">
+        <input type="lastName" id="lastName" class="form-control" placeholder="new last name?" name="lastName" required>
+    </div>
+    <br>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
