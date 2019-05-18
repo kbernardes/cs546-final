@@ -78,6 +78,20 @@ async function getThreadsByUser(username) { // maybe use user ID instead of name
     return thread;
 }
 
+async function getThreadsByForum(forum) { // maybe use user ID instead of name? not sure if it matters
+    if (!forum)
+    {
+        throw "You must provide a forum to search for."
+    }
+    const threadCollection = await threads();
+    const threads = await threadCollection.find({ foum: String(forum) }).toArray();
+    if (threads === null)
+    {
+        throw "No threads exist by that user."
+    }
+    return threads;
+}
+
 /*async function getAllPosts() 
 {
     const postCollection = await posts();
@@ -172,14 +186,11 @@ return await this.getThreadById(id);
     return await this.getPostById(id);
 }*/
 
-async function getThreadsByForum (forumName) {
-
-}
-
 module.exports = {
     createThread,
     getThreadById,
     getThreadsByUser,
+    getThreadsByForum,
     deleteThreadById,
     editThread
 }

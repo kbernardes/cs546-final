@@ -22,6 +22,15 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:forumName", async (req, res) => {
+  try {
+    const threads = await threadData.getThreadsByForum(forumName);
+    res.render("forum", {forums: postData.forums, threads: threads})
+  } catch (e) {
+    console.log("error");
+  }
+})
+
 router.get("/:forumName/:threadId", async (req, res) => { // access a thread
   try {
     const threads = await threadData.getThreadById(req.params.threadId);
