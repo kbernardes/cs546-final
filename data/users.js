@@ -55,7 +55,7 @@ async function createUser(username, password, email, firstName, lastName)
             return newInsertInformation.insertedId;
           })
           .then(newId => {
-            return this.findUser(newId);
+            return this.findID(newId);
           });
       });
 
@@ -339,16 +339,20 @@ async function checkPass(user, password)
     }
 }
 
-async function findID(SID)
+async function findID(id)
 {
-    for (let x = 0; x < userList.length; x++)
+    const userCollection = await users();
+    
+    if (!id || typeof id != "string")
     {
-        if (userList[x].SessionID === SID)
-        {
-            return userList[x];
-        }
+        throw "You must provide a id."
     }
-    throw "The Session ID could not be found.";
+    const user = await userCollection.findOne({ _id: id })
+    if (user === null) {
+        console.log("fail1");
+        return false;
+    }
+    return user;
 }
 module.exports = {
     findUser,
