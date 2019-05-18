@@ -59,10 +59,16 @@ router.post("/signup", async (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const email = req.body.email;
-    const user = await data.users.createUser(username, password, email, firstName, lastName);
-    req.session.sessionID = uuid.v4();
-    user.sessionID = req.session.sessionID;
-    res.redirect("/users" );
+    const useralready = await data.users.findUser(username);
+    if(useralready == Null){
+        const user = await data.users.createUser(username, password, email, firstName, lastName);
+        req.session.sessionID = uuid.v4();
+        user.sessionID = req.session.sessionID;
+        res.redirect("/users" );
+    }
+    else{
+        res.status(402).render("error", {information: "Username already taken, please try a different name"});
+    }
 });
 
 router.get("/logout", async(req, res) => {
