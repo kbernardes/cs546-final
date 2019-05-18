@@ -4,6 +4,25 @@ const users = require("./users");
 const uuid = require("node-uuid");
 const mongo = require("mongodb");
 
+let forums = [
+    {
+        title: "Mafia Game Signups",
+        threads: []    
+    },
+    {
+        title: "Ongoing Games",
+        threads: []
+    },
+    {
+        title: "Game Discussion",
+        threads: []
+    },
+    {
+        title: "General Discussion",
+        threads: []
+    }
+]
+
 async function addPost(username, content) 
 {
     if (!user || typeof username != "string")

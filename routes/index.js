@@ -1,9 +1,9 @@
 const userRoutes = require("./users");
-const postRoutes = require("./posts");
+const forumRoutes = require("./forums");
 
 const constructorMethod = app => {
   app.use("/users", userRoutes);
-  app.use("/posts", postRoutes);
+  app.use("/forums", forumRoutes);
 
   app.use("*", (req, res) => {
     res.sendStatus(404);

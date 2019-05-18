@@ -5,23 +5,6 @@ const uuid = require("node-uuid");
 const mongoCollections = require("../data/collections");
 const users = mongoCollections.users;
 
-async function authTest(req) {
-    if ((req.session.sessionID === undefined) || (!req.session.sessionID) || (req.session.sessionID !== (await data.users.userSID(req.session.sessionID)).sessionID)) {
-      return false;
-  } 
-    else
-      return true;
-  }
-
-router.get("/", async (req, res) => {
-    if (await authTest(req)) {
-        res.render("loggedin-frontpage", {user: await data.users.userSID(req.session.sessionID)});
-    }
-    else {
-        res.render("frontpage");
-    }
-});
-
 router.get("/login", async (req, res) => {
     // check if user is signed in, redirect to / if they are
     res.render("login");
