@@ -8,7 +8,7 @@ const mongo = require("mongodb");
 async function createThread(username, title, forum, content) // a new thread should also create a new post
 // maybe no content, and just have the content be part of the post that is subsequently created
 {
-    if (!user || typeof username != "string")
+    if (!username || typeof username != "string")
     {
         throw "You must provide a user for your thread in the form of a string.";
     }
@@ -16,11 +16,12 @@ async function createThread(username, title, forum, content) // a new thread sho
     {
         throw "You must provide a title for your thread in the form of a string.";
     }
-    if (!content || typeof forum != "string")
+    if (!forum || typeof forum != "string")
     {
         throw "You must provide a forum for your thread in the form of a string.";
     }
-    const threadCollection = await threads();
+/*
+    const threadDB = await threadCollection();
 
     let newThread = {
         username: username,
@@ -40,6 +41,24 @@ async function createThread(username, title, forum, content) // a new thread sho
     const thread = await this.getThreadById(newId);
 
     return thread;
+*/
+    return threadCollection().then(threadDB => {
+        let newThread = {
+            _id: uuid.v4(),
+            title: title,
+            forum: forum,
+            username: username
+        };
+  
+        return threadDB
+          .insertOne(newThread)
+          .then(newInsertInformation => {
+            return newInsertInformation.insertedId;
+          })
+          .then(newId => {
+            return this.getThreadById(newId);
+          });
+      });
 }
 
 async function getThreadById(id)
@@ -48,20 +67,15 @@ async function getThreadById(id)
     {
         throw "You must provide an id to search for."
     }
-    let userId;
-    let username;
 
-    const threadCollection = await threads();
-    const thread = await threadCollection.findOne({ _id: mongo.ObjectId(id) });
+    const threadDB = await threadCollection();
+    const thread = await threadDB.findOne({ _id: id });
     if (thread === null)
     {
         throw "No post exists with that id."
     }
-    // the following section might have some errors:
-    userId = thread.username;
-    username = await users.getUserById(userId); // could be an issue with using the var name username again?
-    thread.username = {_id: username._id, name: username.name}; // this might be messed up
-    return post;
+    
+    return thread;
 }
 
 async function getThreadsByUser(username) { // maybe use user ID instead of name? not sure if it matters
@@ -114,7 +128,7 @@ async function deleteThreadById(id) { // needs to also delete any posts that are
     }
     const threadCollection = await threads();
     const theThread = await this.getThreadById(id);
-    const deletionInfo = await threadCollection.removeOne({ _id: mongo.ObjectId(id) });
+    const deletionInfo = await threadCollection.removeOne({ _id: id });
     if (deletionInfo.deletedCount === 0) 
     {
         throw `Could not delete post with id of ${id}`;
@@ -151,7 +165,7 @@ const postUpdate = {
     $set: { title: newTitle }
 };
 
-const updatedInfo = await threadCollection.updateOne({ _id: mongo.ObjectId(id) }, postUpdate);
+const updatedInfo = await threadCollection.updateOne({ _id: id }, postUpdate);
 if (updatedInfo.modifiedCount === 0) 
 {
     throw "The thread title wasn't changed.";

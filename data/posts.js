@@ -27,9 +27,10 @@ let forums = [
     }
 ]
 
-async function addPost(username, content) 
+async function addPost(username, content, thread) 
 {
-    if (!user || typeof username != "string")
+    console.log(typeof content);
+    if (!username || typeof username != "string")
     {
         throw "You must provide a user for your post in the form of a string.";
     }
@@ -37,6 +38,7 @@ async function addPost(username, content)
     {
         throw "You must provide content for your post in the form of a string.";
     }
+    /*
     const postCollection = await posts();
 
     let newPost = {
@@ -55,6 +57,25 @@ async function addPost(username, content)
     const post = await this.getPostById(newId);
 
     return post;
+    */
+
+    return posts().then(postCollection => {
+        let newPost = {
+            _id: uuid.v4(),
+            content: content,
+            thread: thread,
+            username: username
+        };
+  
+        return postCollection
+          .insertOne(newPost)
+          .then(newInsertInformation => {
+            return newInsertInformation.insertedId;
+          })
+          .then(newId => {
+            return this.getPostById(newId);
+          });
+      });
 }
 
 async function getPostById(id)
@@ -67,7 +88,7 @@ async function getPostById(id)
     let username;
 
     const postCollection = await posts();
-    const post = await postCollection.findOne({ _id: mongo.ObjectId(id) });
+    const post = await postCollection.findOne({ _id: id });
     if (post === null)
     {
         throw "No post exists with that id."
@@ -128,7 +149,7 @@ async function deletePostById(id) {
     }
     const postCollection = await posts();
     const thePost = await this.getPostById(id);
-    const deletionInfo = await postCollection.removeOne({ _id: mongo.ObjectId(id) });
+    const deletionInfo = await postCollection.removeOne({ _id: id });
     if (deletionInfo.deletedCount === 0) 
     {
         throw `Could not delete post with id of ${id}`;
@@ -165,7 +186,7 @@ const postUpdate = {
     $set: { content: newContent }
 };
 
-const updatedInfo = await postCollection.updateOne({ _id: mongo.ObjectId(id) }, postUpdate);
+const updatedInfo = await postCollection.updateOne({ _id: id }, postUpdate);
 if (updatedInfo.modifiedCount === 0) 
 {
     throw "The post content wasn't changed.";

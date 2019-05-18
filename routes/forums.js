@@ -25,24 +25,34 @@ router.get("/", async (req, res) => {
 router.get("/:forumName", async (req, res) => {
   try {
     const threads = await threadData.getThreadsByForum(req.params.forumName);
-    res.render("forum", {forums: postData.forums, threads: threads})
+    res.render("forum", {forum: await postData.getForumByURL(req.params.forumName), threads: threads})
   } catch (e) {
     res.status(404).json({ error: "Threads not found." });
   }
 });
 
 router.get("/:forumName/new-thread", async (req, res) => { // access a thread
-  res.render("newThread");
+  if (await authTest(req)) {
+    res.render("newthread", {forum: await postData.getForumByURL(req.params.forumName)});
+  }
+  else {
+      res.render("login");
+  }
 });
 
 router.post("/:forumName/new-thread", async (req, res) => {
-  const forum = await postData.getForumByURL(req.params.forumName).title;
-  const title = req.body.title;
-  const author = await userData.userSID(req.session.sessionID);
-  const newThread = await threadData.createThread(author.username, title, forum, req.body.content);
-  const newPost = await postData.addPost(author.username, req.body.content);
+  if (await authTest(req)) {
+    const forum = await postData.getForumByURL(req.params.forumName);
+    const title = req.body.title;
+    const author = await userData.userSID(req.session.sessionID);
+    const newThread = await threadData.createThread(author.username, title, forum.title, req.body.content);
+    const newPost = await postData.addPost(author.username, req.body.content);
 
-  res.redirect("/forums/" + req.params.forumName + "/" + newThread._id);
+    res.redirect("/forums/" + forum.url + "/" + newThread._id);
+  }
+  else {
+      res.render("login");
+  }
 });
 
 router.get("/:forumName/:threadId", async (req, res) => { // access a thread

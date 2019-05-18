@@ -1,6 +1,6 @@
 <head>
     <meta charset="utf-8">
-    <title>{{forums.title}}</title>
+    <title>{{forum.title}}</title>
     <link rel="stylesheet" href="/css/frontpage.css">
 </head>
 <body>
@@ -10,8 +10,11 @@
             <li><a href="/users/login">Login</a></li>
             <li><a href="/users/signup">Signup</a></li>
         </ul>
-        <h1>{{forums.title}}</h1>
+        <h1>{{forum.title}}</h1>
     </header>
+<form action="/forums/{{forum.url}}/new-thread" method="get">
+  <button type="submit" value="Submit">Create Thread</button>  
+</form> 
     <ul id = "threads-list">
     {{#each threads}}
     <li>

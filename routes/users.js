@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
         $set: {sessionID: req.session.sessionID}
     };
     await userCollection.updateOne({ _id: user._id }, updateSID);
-    res.redirect("/users");
+    res.redirect("/forums");
 });
 
 router.get("/signup", async (req, res) => {
