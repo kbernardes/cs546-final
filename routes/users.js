@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const usersData = require("../data");
-const uuid = require("node-uuid");
+const data = require("../data");
+const uuid = require("node-uuid");  
 
 router.get("/", async (req, res) => {
     res.render("frontpage");
@@ -17,25 +17,23 @@ router.post("/login", async (req, res) => {
     const password = req.body.password;
 
     // Check that user exists
-    let user = await usersData.findUser(username);
+    let user = await data.users.findUser(username);
     if (user === false) {
-        req.session.auth = false;
-        res.status(401).render("loginerror", {errorMsg: "Username not valid"});
+        res.status(401).render("error", {information: "Username not valid"});
         return;
         //res.redirect("/");
     }
     
     // Check if password is correct
-    const passChk = await usersData.checkPass(username, password);
+    const passChk = await data.users.checkPass(username, password);
     if (passChk === false) {
-        req.session.auth = false;
-        res.status(401).render("loginerror", {errorMsg: "Password incorrect"});
+        res.status(401).render("error", {information: "Password incorrect"});
         return;
     }
 
     req.session.sessionID = uuid.v4();
     user.sessionID = req.session.sessionID;
-    res.redirect("/profile/" + username);
+    res.redirect("/users/profile/" + username);
 });
 
 router.get("/signup", async (req, res) => {
@@ -50,15 +48,15 @@ router.post("/signup", async (req, res) => {
     const lastName = req.body.lastName;
     const email = req.body.email;
 
-    await usersData.createUser(username, password, email, firstName, lastName);
+    const user = await data.users.createUser(username, password, email, firstName, lastName);
     
     req.session.sessionID = uuid.v4();
     user.sessionID = req.session.sessionID;
-    res.redirect("/");
+    res.redirect("/users" );
 });
 
 router.get("/logout", async(req, res) => {
-    let user = await usersData.userSID(req.session.sessionID);
+    let user = await data.users.userSID(req.session.sessionID);
     req.session.sessionID = undefined;
     user.sessionID = req.session.sessionID;
     res.render("logout");
@@ -66,10 +64,15 @@ router.get("/logout", async(req, res) => {
 
 router.get("/profile/:username", async (req, res) => {
     // renders different file if user is accessing their own 
+    res.render("profile");
 });
 
 router.put("/profile/:username", async (req, res) => {
     // user must be logged in and can only update their own profile
+});
+
+router.get("/all", async (req,res) => {
+   data.users.ge 
 });
 
 module.exports = router;

@@ -1,10 +1,18 @@
 <head>
     <meta charset="utf-8">
     <title>Mafia Forum</title>
-    <a href="/infochange">{{user.username}}</a>
     <link rel="stylesheet" href="/css/frontpage.css">
 </head>
 <body>
+    <header>
+        <h1>Front Page</h1>
+        <ul>
+            <a href="/users">Home</a>
+            <a href="/users/login">Login</a>
+            <a href="/users/signup">Signup</a>
+        </ul>
+    </header>
+    <a href="/infochange">{{user.username}}</a>
     <div id = "frontpagethreads">
     {{#each nav}}
         <a href="/thread/{{../permalink}}#{{id}}">{{thread.title}}</a>

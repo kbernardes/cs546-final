@@ -6,7 +6,7 @@
 <body>
     <main>
         <h1>Enter the following</h1>
-        <form id="login-form" action="/login" method="POST">
+        <form id="login-form" action="/users/signup" method="POST">
             <div class="form-group">
                 <input type="text" id="username" class="form-control" placeholder="Username" name="username" required>
             </div>
@@ -34,6 +34,6 @@
     </main>
     {{error}}
     <br>
-    <a href="/login">Already have an account?</a>
+    <a href="/users/login">Already have an account?</a>
     </br>
 </body>

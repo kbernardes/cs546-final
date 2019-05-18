@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const mongo = require("mongodb");
 const mongoCollections = require("./collections");
 const users = mongoCollections.users;
+const uuid = require("node-uuid");  
 
 async function createUser(username, password, email, firstName, lastName)
 {
@@ -25,16 +26,26 @@ async function createUser(username, password, email, firstName, lastName)
     {
         throw "You must provide a last name.";
     }
+    const saltRounds = 16;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const userCollection = await users();
 
+    const user = this.findUser(username);
+
+    if (user) {
+        return false;
+    }
+
+    const newId = uuid.v4();
+
     let newUser = {
         username: username,
-        password: password,
+        password: hashedPassword,
         email: email,
         firstName: firstName,
         lastName: lastName,
-        _id: uuid.v4(),
+        _id: newId,
         sessionID: undefined
     };
 
@@ -43,7 +54,7 @@ async function createUser(username, password, email, firstName, lastName)
             return newInsertInformation.insertedId;
         })
         .then(newId => {
-            return this.get(newId);
+            return this.getUserById(newId);
         });
 
     /*const insertInfo = await userCollection.insertOne(newUser);
@@ -94,16 +105,16 @@ async function getAllThreads()
 async function getUserById(id)
 {
     if (!id) 
-        {
-            throw "You must provide an id to search for."
-        }
-        const userCollection = await users();
-        const user = await userCollection.findOne({ _id: mongo.ObjectId(id) });
-        if (user === null)
-        {
-            throw "No user exists with that id."
-        }
-        return user;
+    {
+        throw "You must provide an id to search for."
+    }
+    const userCollection = await users();
+    const user = await userCollection.findOne({ _id: id });
+    if (user === null)
+    {
+        throw "No user exists with that id."
+    }
+    return user;
 }
 
 async function userSID(sessionID)
@@ -131,7 +142,7 @@ async function deleteUser(id)
         throw "You must provide an id to search for."
     }
     const userCollection = await users();
-    const result = await this.get(mongo.ObjectId(id));
+    const result = await this.get(id);
     await posts.removeByUser(id);
     const deleteUser = await userCollection.removeOne(result);
     if (deleteUser.deletedCount === 0)
@@ -162,7 +173,7 @@ async function changeUsername(id, newName)
     const updatedUser = {
         $set: {username: newName}
     };
-    const updateInfo = await userCollection.updateOne({ _id: mongo.ObjectId(id) }, updatedUser);
+    const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
     if (updateInfo.modifiedCount === 0)
     {
         throw "The user does not exist and cannot be updated.";
@@ -184,7 +195,7 @@ async function changeFirstName(id, newName)
     const updatedUser = {
         $set: {firstName: newName}
     };
-    const updateInfo = await userCollection.updateOne({ _id: mongo.ObjectId(id) }, updatedUser);
+    const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
     if (updateInfo.modifiedCount === 0)
     {
         throw "The user does not exist and cannot be updated.";
@@ -206,7 +217,7 @@ async function changeLastName(id, newName)
     const updatedUser = {
         $set: {lastName: newName}
     };
-    const updateInfo = await userCollection.updateOne({ _id: mongo.ObjectId(id) }, updatedUser);
+    const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
     if (updateInfo.modifiedCount === 0)
     {
         throw "The user does not exist and cannot be updated.";
@@ -228,7 +239,7 @@ async function changePassword(id, newPass)
     const updatedUser = {
         $set: {password: newPass}
     };
-    const updateInfo = await userCollection.updateOne({ _id: mongo.ObjectId(id) }, updatedUser);
+    const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
     if (updateInfo.modifiedCount === 0)
     {
         throw "The user does not exist and cannot be updated.";
@@ -237,18 +248,20 @@ async function changePassword(id, newPass)
 }
 
 async function findUser(username) {
+    const userCollection = await users();
+    
     if (!username || typeof username != "string")
     {
         throw "You must provide a username."
     }
-    for (let x = 0; x < userList.length; x++)
-    {
-        if (userList[x].username === username)
-        {
-            return userList[x];
-        }
+
+    const user = await userCollection.findOne({ username: username })
+
+    if (user === null) {
+        return false;
     }
-    throw "The user could not be found.";
+
+    return user;
 }
 
 async function checkPass(user, password)
