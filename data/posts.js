@@ -18,7 +18,8 @@ async function addPost(username, content)
 
     let newPost = {
         username: username,
-        content: content
+        content: content,
+        thread: thread
     };
 
     const insertInfo = await postCollection.insertOne(newPost);
@@ -64,6 +65,19 @@ async function getPostsByUser(username) {
     if (post === null)
     {
         throw "No posts exist by that user."
+    }
+    return post;
+}
+async function getPostsByThread(thread) {
+    if (!thread)
+    {
+        throw "You must provide a thread to search for."
+    }
+    const postCollection = await posts();
+    const post = await postCollection.find({ thread: String(thread) }).toArray();
+    if (post === null)
+    {
+        throw "This thread is empty."
     }
     return post;
 }
@@ -166,6 +180,7 @@ module.exports = {
     addPost,
     getPostById,
     getPostsByUser,
+    getPostsByThread,
     deletePostById,
     editPost
 }
