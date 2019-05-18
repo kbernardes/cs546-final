@@ -1,5 +1,5 @@
 body {
-    background-color: rgba(133, 133, 248, 0.747);
+    background-color: rgba(252, 8, 8, 0.856);
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -8,6 +8,7 @@ body {
 title{
     font: sans-serif;
     color: black;
+    text-shadow: 1.5px 1.5px red;
     font-size: 45px; 
 }
 
@@ -25,12 +26,12 @@ p {
 
 a:link {
     font-size: 15px;
-    color: red;
+    color: blue;
 
 }
 a:visited {
     font-size: 15px;
-    color: blue;
+    color: rgb(19, 165, 56);
 }
 a:hover {
     font-size: 15px;
@@ -69,5 +70,5 @@ button[type=submit] {
     clear: left;
     padding: 12px 22px;
     border-radius: 8px;
-    color: #bf0000;
+    color: #b2c418;
 }
