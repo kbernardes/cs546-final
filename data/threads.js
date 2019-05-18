@@ -1,5 +1,5 @@
 const mongoCollections = require("./collections");
-const threads = mongoCollections.threads;
+const threadCollection = mongoCollections.threads;
 const users = require("./users");
 const posts = require("./posts");
 const uuid = require("node-uuid");
@@ -81,26 +81,14 @@ async function getThreadsByUser(username) { // maybe use user ID instead of name
 async function getThreadsByForum(forum) {
     if (!forum)
     {
-        console.log("1");
         throw "You must provide a forum to search for."
     }
-    console.log("2");
-    const threadCollection = await threads();
-    console.log("3");
-    const threads = await threadCollection.find({ foum: String(forum) }).toArray();
-    console.log("4");
-    if (threads === null)
-    {
-        console.log("5");
-        throw "No threads exist by that user."
-    }
-    console.log("test");
-    const threadCollection = await threads();
-    console.log("test2");
-    const threads = await threadCollection.find({ forum: String(forum) }).toArray();
-    console.log("test3");
+   
+    const threadDB = await threadCollection();
+    
+    const threadArray = await threadDB.find({ forum: String(forum) }).toArray();
 
-    return threads;
+    return threadArray;
 }
 
 /*async function getAllPosts() 
