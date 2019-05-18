@@ -1,39 +1,45 @@
 const mongoCollections = require("./collections");
-const posts = mongoCollections.posts;
+const threads = mongoCollections.threads;
 const users = require("./users");
 const uuid = require("node-uuid");
 const mongo = require("mongodb");
 
-async function addPost(username, content) 
+async function createThread(username, title, content) // a new thread should also create a new post
+// maybe no content, and just have the content be part of the post that is subsequently created
 {
     if (!user || typeof username != "string")
     {
         throw "You must provide a user for your post in the form of a string.";
     }
+    if (!title || typeof title != "string")
+    {
+        throw "You must provide a title for your post in the form of a string.";
+    }
     if (!content || typeof content != "string")
     {
         throw "You must provide content for your post in the form of a string.";
     }
-    const postCollection = await posts();
+    const threadCollection = await threads();
 
-    let newPost = {
+    let newThread = {
         username: username,
+        title: title,
         content: content
     };
 
-    const insertInfo = await postCollection.insertOne(newPost);
+    const insertInfo = await threadCollection.insertOne(newThread);
     if (insertInfo.insertedCount === 0) 
     {
-        throw "Could not add post"
+        throw "Could not create thread."
     }
 
     const newId = insertInfo.insertedId;
-    const post = await this.getPostById(newId);
+    const thread = await this.getThreadById(newId);
 
-    return post;
+    return thread;
 }
 
-async function getPostById(id)
+async function getThreadById(id)
 {
     if (!id) 
     {
@@ -42,30 +48,31 @@ async function getPostById(id)
     let userId;
     let username;
 
-    const postCollection = await posts();
-    const post = await postCollection.findOne({ _id: mongo.ObjectId(id) });
-    if (post === null)
+    const threadCollection = await threads();
+    const thread = await threadCollection.findOne({ _id: mongo.ObjectId(id) });
+    if (thread === null)
     {
         throw "No post exists with that id."
     }
-    authorId = post.username;
-    username = await users.getUserById(userId);
-    post.username = {_id: username._id, name: username.name};
+    // the following section might have some errors:
+    userId = thread.username;
+    username = await users.getUserById(userId); // could be an issue with using the var name username again?
+    thread.username = {_id: username._id, name: username.name}; // this might be messed up
     return post;
 }
 
-async function getPostsByUser(username) {
+async function getThreadsByUser(username) { // maybe use user ID instead of name? not sure if it matters
     if (!username)
     {
         throw "You must provide a user to search for."
     }
-    const postCollection = await posts();
-    const post = await postCollection.find({ username: String(username) }).toArray();
-    if (post === null)
+    const threadCollection = await threads();
+    const thread = await threadCollection.find({ username: String(username) }).toArray();
+    if (thread === null)
     {
-        throw "No posts exist by that user."
+        throw "No threads exist by that user."
     }
-    return post;
+    return thread;
 }
 
 /*async function getAllPosts() 
@@ -84,19 +91,19 @@ async function getPostsByUser(username) {
     return postsAll;
 }*/
 
-async function deletePostById(id) {
+async function deleteThreadById(id) { // needs to also delete any posts that are in that thread
     if (!id)
     {
         throw "You must provide an id to search for.";
     }
-    const postCollection = await posts();
-    const thePost = await this.getPostById(id);
-    const deletionInfo = await postCollection.removeOne({ _id: mongo.ObjectId(id) });
+    const threadCollection = await threads();
+    const theThread = await this.getThreadById(id);
+    const deletionInfo = await threadCollection.removeOne({ _id: mongo.ObjectId(id) });
     if (deletionInfo.deletedCount === 0) 
     {
         throw `Could not delete post with id of ${id}`;
     }
-    let result = {"deleted": true, "data": thePost};
+    let result = {"deleted": true, "data": theThread};
     return result;
 }
 
@@ -112,29 +119,29 @@ for (let x = 0; x < deletePosts.length; x++)
 }
 }*/
 
-async function editPost(id, newContent) {
+async function editThread(id, newTitle) {
 if (!id)
 {
     throw "You must provide an id to search for.";
 }
 
-if (!newContent)
+if (!newTitle)
 {
-    throw "You must provide new content for the post.";
+    throw "You must provide a new title for the thread.";
 }
 
-const postCollection = await posts();
+const threadCollection = await threads();
 const postUpdate = {
-    $set: { content: newContent }
+    $set: { title: newTitle }
 };
 
-const updatedInfo = await postCollection.updateOne({ _id: mongo.ObjectId(id) }, postUpdate);
+const updatedInfo = await threadCollection.updateOne({ _id: mongo.ObjectId(id) }, postUpdate);
 if (updatedInfo.modifiedCount === 0) 
 {
-    throw "The post content wasn't changed.";
+    throw "The thread title wasn't changed.";
 }
 
-return await this.getPostById(id);
+return await this.getThreadById(id);
 }
 
 /*async function updateContent(id, newContent) {
@@ -163,9 +170,9 @@ return await this.getPostById(id);
 }*/
 
 module.exports = {
-    addPost,
-    getPostById,
-    getPostsByUser,
-    deletePostById,
-    editPost
+    createThread,
+    getThreadById,
+    getThreadsByUser,
+    deleteThreadById,
+    editThread
 }
