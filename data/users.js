@@ -147,19 +147,17 @@ async function getUserById(id)
 
 async function userSID(sessionID)
 {
-        if (!sessionID || typeof sessionID != "string")
-        {
-            throw "You must provide a username."
-        }
-        const userList = await users();
-        for (let x = 0; x < userList.length; x++)
-        {
-            if (userList[x].sessionID === sessionID)
-            {
-                return userList[x];
-            }
-        }
-        throw "The user could not be found.";
+    if (!sessionID || typeof sessionID != "string")
+    {
+        return false;
+    }
+    const userCollection = await users();
+    const user = await userCollection.findOne({ sessionID: sessionID });
+    console.log("User with SID: " + user);
+    if (!user) {
+        return false;
+    }
+    return user;
 }
 
 async function deleteUser(id)

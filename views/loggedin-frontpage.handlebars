@@ -8,11 +8,11 @@
         <h1>Front Page</h1>
         <ul>
             <a href="/users">Home</a>
-            <a href="/users/login">Login</a>
-            <a href="/users/signup">Signup</a>
+            <a href="/users/profile/{{user.username}}">{{user.username}}</a>
+            <a href="/users/signout">Signout</a>
         </ul>
     </header>
-    <a href="/infochange">{{user.username}}</a>
+    <a href="/users/profile/{{user.username}}">{{user.username}}</a>
     <div id = "frontpagethreads">
     {{#each nav}}
         <a href="/thread/{{../permalink}}#{{id}}">{{thread.title}}</a>
