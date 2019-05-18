@@ -1,3 +1,4 @@
+<main>
 <head>
     <meta charset="utf-8">
     <title>{{user.username}}</title>
@@ -8,10 +9,13 @@
         <h1>{{user.name}}</h1>
         <h2>{{user.wins}}</h2>
     </br>
-        {{#list nav}}
-            <a href="/thread">{{user.thread.title}}</a>
-        {{/list}}
+    <div id = "threads">
+        {{#each threads}}
+            <h2><a href="/thread/{{../permalink}}#{{id}}">{{user.thread.title}}</a></h2>
+        {{/each}}
+    </div>
         <br>
     <a href="/frontpage">back to front page</a>
     </br>
 </body>
+</main>

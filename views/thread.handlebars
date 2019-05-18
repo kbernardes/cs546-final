@@ -4,10 +4,12 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    {{#list nav}}
-        <a href="/newpost">{{thread.post.title}}</a>
+    <div id = "threadposts">
+    {{#each nav}}
+        <a href="/newpost{{../permalink}}#{{id}}">{{thread.post.title}}</a>
         <h1>{{thread.post.poster.username}}</h1>
         <h2>{{thread.post.poster.wins}}</h2>
         <p>{{thread.post.body}}</p>
-    {{/list}}
+    {{/each}}
+    </div>
 </body>

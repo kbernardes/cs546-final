@@ -5,9 +5,11 @@
     <link rel="stylesheet" href="/css/frontpage.css">
 </head>
 <body>
-    {{#list nav}}
-        <a href="/thread">{{thread.title}}</a>
+    <div id = "frontpagethreads">
+    {{#each nav}}
+        <a href="/thread/{{../permalink}}#{{id}}">{{thread.title}}</a>
         <h1>{{thread.poster.username}}</h1>
         <h2>{{thread.poster.wins}}</h2>
-    {{/list}}
+    {{/each}}
+    </div>
 </body>
