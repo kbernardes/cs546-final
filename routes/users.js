@@ -33,12 +33,11 @@ router.post("/login", async (req, res) => {
 
     req.session.sessionID = uuid.v4();
     user.sessionID = req.session.sessionID;
-    res.redirect("/users/profile/" + username);
+    res.redirect("/users");
 });
 
 router.get("/signup", async (req, res) => {
     res.render("signup");
-
 });
 
 router.post("/signup", async (req, res) => {
