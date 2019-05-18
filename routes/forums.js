@@ -3,7 +3,6 @@ const router = express.Router();
 const data = require("../data");
 const postData = data.posts;
 const threadData = data.threads;
-const forumData = data.forums;
 
 async function authTest(req) {
   if ((req.session.sessionID === undefined) || (!req.session.sessionID) || (req.session.sessionID !== (await data.users.userSID(req.session.sessionID)).sessionID)) {
@@ -24,7 +23,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:forumName", async (req, res) => {
   try {
-    const threads = await threadData.getThreadsByForum(forumName);
+    const threads = await threadData.getThreadsByForum(req.params.forumName);
     res.render("forum", {forums: postData.forums, threads: threads})
   } catch (e) {
     console.log("error");
