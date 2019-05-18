@@ -49,7 +49,7 @@ router.post("/signup", async (req, res) => {
     const lastName = req.body.lastName;
     const email = req.body.email;
     const useralready = await data.users.findUser(username);
-    if(useralready == null){
+    if(useralready === false){
         const user = await data.users.createUser(username, password, email, firstName, lastName);
         req.session.sessionID = uuid.v4();
         user.sessionID = req.session.sessionID;
