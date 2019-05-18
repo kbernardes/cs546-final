@@ -8,7 +8,7 @@ router.get("/:id", async (req, res) => {
     const posts = await postData.getPostById(req.params.id);
     res.json(posts);
   } catch (e) {
-    res.status(404).json({ error: "Post not found" });
+    res.status(404).json({ error: "Post not found." });
   }
 });
 

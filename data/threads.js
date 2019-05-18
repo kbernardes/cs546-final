@@ -1,30 +1,31 @@
 const mongoCollections = require("./collections");
 const threads = mongoCollections.threads;
 const users = require("./users");
+const posts = require("./posts");
 const uuid = require("node-uuid");
 const mongo = require("mongodb");
 
-async function createThread(username, title, content) // a new thread should also create a new post
+async function createThread(username, title, forum, content) // a new thread should also create a new post
 // maybe no content, and just have the content be part of the post that is subsequently created
 {
     if (!user || typeof username != "string")
     {
-        throw "You must provide a user for your post in the form of a string.";
+        throw "You must provide a user for your thread in the form of a string.";
     }
     if (!title || typeof title != "string")
     {
-        throw "You must provide a title for your post in the form of a string.";
+        throw "You must provide a title for your thread in the form of a string.";
     }
-    if (!content || typeof content != "string")
+    if (!content || typeof forum != "string")
     {
-        throw "You must provide content for your post in the form of a string.";
+        throw "You must provide a forum for your thread in the form of a string.";
     }
     const threadCollection = await threads();
 
     let newThread = {
         username: username,
         title: title,
-        content: content
+        forum: forum
     };
 
     const insertInfo = await threadCollection.insertOne(newThread);
@@ -32,6 +33,8 @@ async function createThread(username, title, content) // a new thread should als
     {
         throw "Could not create thread."
     }
+
+    posts.addPost(username, content);
 
     const newId = insertInfo.insertedId;
     const thread = await this.getThreadById(newId);
