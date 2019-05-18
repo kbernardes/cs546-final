@@ -199,6 +199,15 @@ return await this.getPostById(id);
     return await this.getPostById(id);
 }*/
 
+async function getForumByURL (url) {
+    for (let i = 0; i < forums.length; i++) {
+        if (url === forums[i].url) {
+            return forums[i];
+        }
+    }
+    return false;
+}
+
 module.exports = {
     addPost,
     getPostById,
@@ -206,5 +215,6 @@ module.exports = {
     getPostsByThread,
     deletePostById,
     editPost,
-    forums
+    forums,
+    getForumByURL
 }
