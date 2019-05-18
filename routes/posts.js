@@ -8,7 +8,6 @@ router.get("/:id", async (req, res) => {
     const posts = await postData.getPostById(req.params.id);
     res.json(posts);
   } catch (e) {
-    res.status(404).json({ error: "Post not found". });
     res.status(404).json({ error: "Post not found" });
   }
 });
@@ -35,11 +34,7 @@ router.post("/", async (req, res) => {
     return;
   }
 
-<<<<<<< HEAD
   if (!postInfo.author) {
-=======
-  if (!postInfo.Name) {
->>>>>>> 4b947dd2b7d6e66e2a98be7a74753a8ff811f35b
     res.status(400).json({ error: "You must provide an author for the post" });
     return;
   }
@@ -135,8 +130,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 4b947dd2b7d6e66e2a98be7a74753a8ff811f35b
