@@ -5,9 +5,15 @@ body {
     font-weight: normal;
 }
 
+title{
+    font: sans-serif;
+    color: black;
+    font-size: 45px; 
+}
+
 h1 {
     color: black;
-    font-size: 45px;
+    font-size: 25px;
     font: helvetica;
 }
 
