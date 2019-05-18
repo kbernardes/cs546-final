@@ -73,31 +73,16 @@ router.get("/:forumName/:threadId", async (req, res) => { // access a thread
 });
 
 router.post("/:forumName/:threadId", async (req, res) => {
-  const threadInfo = req.body;
+  const content = req.body.content;
 
-  if (!threadInfo) {
-    res.status(400).json({ error: "You must provide data to create a thread." });
-    return;
-  }
-
-  if (!threadInfo.title) {
-    res.status(400).json({ error: "You must provide a title for the thread." });
-    return;
-  }
-
-  if (!postInfo.forum) {
-    res.status(400).json({ error: "You must specify which forum to make the post in." });
+  if (!content) {
+    res.status(400).json({ error: "You must provide data to create a post." });
     return;
   }
 
   try {
-    const newThread = await threadData.createThread(
-      threadInfo.username,
-      threadInfo.title,
-      threadInfo.forum,
-      threadInfo.content
-    );
-    res.json(newThread);
+    const newThread = await postData.addPost(await userData.userSID(req.session.sessionID), content, req.params.threadId);
+    res.redirect("/forums/" + req.params.forumName + "/" + req.params.threadId);
   } catch (e) {
     res.sendStatus(500);
   }

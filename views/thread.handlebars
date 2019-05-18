@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+    <h1>{{thread.title}}</h1>
     <ul id = "posts-list">
     {{#each posts}}
         <li id="post-list-item">
@@ -11,5 +12,13 @@
              <p id="post-content">{{this.content}}</p>
         </li>
     {{/each}}
+    {{#if posts}}
+        <form id="new-post-form" action="/forums/{{forum.url}}/new-thread" method="POST">
+            <input type="text" id="content" name="content" placeholder="Post..." required>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Post</button>
+            </div>
+        </form>
+    {{/if}}
     </ul>
 </body>
