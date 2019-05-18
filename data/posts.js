@@ -29,7 +29,6 @@ let forums = [
 
 async function addPost(username, content, thread) 
 {
-    console.log(typeof content);
     if (!username || typeof username != "string")
     {
         throw "You must provide a user for your post in the form of a string.";
@@ -84,8 +83,6 @@ async function getPostById(id)
     {
         throw "You must provide an id to search for."
     }
-    let userId;
-    let username;
 
     const postCollection = await posts();
     const post = await postCollection.findOne({ _id: id });
@@ -93,9 +90,7 @@ async function getPostById(id)
     {
         throw "No post exists with that id."
     }
-    authorId = post.username;
-    username = await users.getUserById(userId);
-    post.username = {_id: username._id, name: username.name};
+    
     return post;
 }
 

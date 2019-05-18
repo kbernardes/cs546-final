@@ -18,7 +18,7 @@
     <ul id = "threads-list">
     {{#each threads}}
     <li>
-        <a id="thread-items" href="/forums/{{forums.title}}/{{forums.threads}}">{{threads.title}}</a>
+        <a id="thread-items" href="/forums/{{this.forum}}/{{this._id}}">{{this.title}}</a>
     </li>
     {{/each}}
     </ul>

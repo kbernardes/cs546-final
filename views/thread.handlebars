@@ -6,12 +6,10 @@
 <body>
     <ul id = "posts-list">
     {{#each posts}}
-        <li>
-            {{posts.title}}
+        <li id="post-list-item">
+             <p id="post-author">{{this.username}}</h1>             
+             <p id="post-content">{{this.content}}</p>
         </li>
-        <h1>{{author.username}}</h1>
-        <h2>{{author.wins}}</h2>
-        <p>{{posts.body}}</p>
     {{/each}}
     </ul>
 </body>

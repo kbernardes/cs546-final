@@ -42,12 +42,17 @@ async function createThread(username, title, forum, content) // a new thread sho
 
     return thread;
 */
+
+    const id = uuid.v4();
+    const newPost = await posts.addPost(username, content, id);
+
     return threadCollection().then(threadDB => {
         let newThread = {
-            _id: uuid.v4(),
+            _id: id,
             title: title,
             forum: forum,
-            username: username
+            username: username,
+            posts: [newPost._id]
         };
   
         return threadDB
@@ -74,7 +79,7 @@ async function getThreadById(id)
     {
         throw "No post exists with that id."
     }
-    
+
     return thread;
 }
 

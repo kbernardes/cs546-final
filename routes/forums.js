@@ -24,8 +24,9 @@ router.get("/", async (req, res) => {
 
 router.get("/:forumName", async (req, res) => {
   try {
-    const threads = await threadData.getThreadsByForum(req.params.forumName);
-    res.render("forum", {forum: await postData.getForumByURL(req.params.forumName), threads: threads})
+    const forum = await postData.getForumByURL(req.params.forumName);
+    const threads = await threadData.getThreadsByForum(forum.title);
+    res.render("forum", {forum: forum, threads: threads})
   } catch (e) {
     res.status(404).json({ error: "Threads not found." });
   }
@@ -42,11 +43,11 @@ router.get("/:forumName/new-thread", async (req, res) => { // access a thread
 
 router.post("/:forumName/new-thread", async (req, res) => {
   if (await authTest(req)) {
+
     const forum = await postData.getForumByURL(req.params.forumName);
     const title = req.body.title;
     const author = await userData.userSID(req.session.sessionID);
     const newThread = await threadData.createThread(author.username, title, forum.title, req.body.content);
-    const newPost = await postData.addPost(author.username, req.body.content);
 
     res.redirect("/forums/" + forum.url + "/" + newThread._id);
   }
@@ -65,7 +66,7 @@ router.get("/:forumName/:threadId", async (req, res) => { // access a thread
       authorArray[i] = await userData.findUser(postArray[i].username);
     }
 
-    res.render("thread", {thread: thread, posts: postArray, author});
+    res.render("thread", {thread: thread, posts: postArray, author: authorArray});
   } catch (e) {
     res.status(404).json({ error: "Thread not found." });
   }
