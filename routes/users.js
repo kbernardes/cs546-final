@@ -70,7 +70,7 @@ router.post("/signup", async (req, res) => {
         const user = await data.users.createUser(username, password, email, firstName, lastName);
         req.session.sessionID = uuid.v4();
         user.sessionID = req.session.sessionID;
-        res.redirect("/users" );
+        res.redirect("/users");
     }
     else{
         res.status(402).render("error", {information: "Username already taken, please try a different name"});
@@ -79,18 +79,67 @@ router.post("/signup", async (req, res) => {
 
 router.get("/logout", async(req, res) => {
     let user = await data.users.userSID(req.session.sessionID);
-    req.session.sessionID = undefined;
-    user.sessionID = req.session.sessionID;
+    //req.session.sessionID = undefined;
+    user.sessionID = undefined;
+    req.session.regenerate(function (err) 
+    {
+        req.session.sessionID = "";
+    });
     res.render("logout");
 });
 
 router.get("/profile/:username", async (req, res) => {
+    if (username === req.session.username)
+    {
+        res.redirect("/infochange");
+    }
+    else
+    {
+        res.redirect("/profile");
+    }
     // renders different file if user is accessing their own 
-    res.redirect("/users");
+    //res.redirect("/users");
 });
 
 router.put("/profile/:username", async (req, res) => {
-    // user must be logged in and can only update their own profile
+    const userInfo = req.body;
+    let theUser = await data.users.findUser(username);
+
+  if (!userInfo) {
+    res.status(400).json({ error: "You must provide data to update a user's info." });
+    return;
+  }
+
+  try {
+      await data.users.changeUsername({_id: theUser._id}, userInfo.username);
+  } catch (e) {
+      res.status(400).json({ error: "You either entered an empty username or tried a name that is already taken. Please try something else." });
+  }
+
+  /*try {
+    await postData.getPostById(req.params.id);
+  } catch (e) {
+    res.status(404).json({ error: "Post not found" });
+    return;
+  }*/
+
+  try {
+    await data.users.changePassword({_id: theUser._id}, userInfo.password);
+} catch (e) {
+    res.status(400).json({ error: "You cannot enter an empty password. Please try something else." });
+}
+
+try {
+    await data.users.changeFirstName({_id: theUser._id}, userInfo.firstName);
+} catch (e) {
+    res.status(400).json({ error: "You cannot enter an empty first name. Please try something else." });
+}
+
+try {
+    await data.users.changeLastName({_id: theUser._id}, userInfo.lastName);
+} catch (e) {
+    res.status(400).json({ error: "You cannot enter an empty last name. Please try something else." });
+}
 });
 
 router.get("/all", async (req,res) => {

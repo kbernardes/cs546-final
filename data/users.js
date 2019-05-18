@@ -195,6 +195,14 @@ async function changeUsername(id, newName)
     {
         throw "You must provide a new name to change to.";
     }
+    if (newName === "")
+    {
+        throw "Your username cannot be empty."
+    }
+    if (await findUser(newName) !== false)
+    {
+        throw "The username already exists. Please select a different one."
+    }
     const userCollection = await users();
     const updatedUser = {
         $set: {username: newName}
@@ -216,6 +224,10 @@ async function changeFirstName(id, newName)
     if (!newName)
     {
         throw "You must provide a new name to change to.";
+    }
+    if (newName === "")
+    {
+        throw "Your first name cannot be empty."
     }
     const userCollection = await users();
     const updatedUser = {
@@ -239,6 +251,10 @@ async function changeLastName(id, newName)
     {
         throw "You must provide a new name to change to.";
     }
+    if (newName === "")
+    {
+        throw "Your last name cannot be empty."
+    }
     const userCollection = await users();
     const updatedUser = {
         $set: {lastName: newName}
@@ -261,9 +277,15 @@ async function changePassword(id, newPass)
     {
         throw "You must provide a new name to change to.";
     }
+    if (newPass === "")
+    {
+        throw "Your password cannot be empty."
+    }
     const userCollection = await users();
+    const saltRounds = 16;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     const updatedUser = {
-        $set: {password: newPass}
+        $set: {hashedPassword: hashedPassword}
     };
     const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
     if (updateInfo.modifiedCount === 0)
