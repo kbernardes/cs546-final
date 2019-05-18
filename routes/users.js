@@ -110,66 +110,36 @@ router.put("/profile/:username", async (req, res) => {
     return;
   }
 
-  if (userInfo.username)
-  {
-    if (userInfo.username !== "")
-    {
-        await changeUsername({_id: theUser._id}, userInfo.username);
-    }
-    else
-    {
-        
-    }
-  }
-
-  if (!postInfo.newTitle && !postInfo.newContent) {
-    res.status(400).json({ error: "You must provide a title and/or content for the post" });
-    return;
-  }
-
   try {
+      await data.users.changeUsername({_id: theUser._id}, userInfo.username);
+  } catch (e) {
+      res.status(400).json({ error: "You either entered an empty username or tried a name that is already taken. Please try something else." });
+  }
+
+  /*try {
     await postData.getPostById(req.params.id);
   } catch (e) {
     res.status(404).json({ error: "Post not found" });
     return;
-  }
+  }*/
 
-  if (!postInfo.newTitle)
-  {
-    try {
-        const updatedPost = await postData.updateContent(req.params.id, postInfo.newContent);
-        res.json(updatedPost);
-      } catch (e) {
-        res.sendStatus(500);
-      }
-  }
+  try {
+    await data.users.changePassword({_id: theUser._id}, userInfo.password);
+} catch (e) {
+    res.status(400).json({ error: "You cannot enter an empty password. Please try something else." });
+}
 
-  else if (!postInfo.newContent)
-  {
-    try {
-        const updatedPost = await postData.updateTitle(req.params.id, postInfo.newTitle);
-        res.json(updatedPost);
-      } catch (e) {
-        res.sendStatus(500);
-      }
-  }
+try {
+    await data.users.changeFirstName({_id: theUser._id}, userInfo.firstName);
+} catch (e) {
+    res.status(400).json({ error: "You cannot enter an empty first name. Please try something else." });
+}
 
-  else
-  {
-    try {
-        await postData.updateTitle(req.params.id, postInfo.newTitle);
-      } catch (e) {
-        res.sendStatus(500);
-      }
-
-    try {
-        const updatedPost = await postData.updateContent(req.params.id, postInfo.newContent);
-        res.json(updatedPost);
-        } catch (e) {
-        res.sendStatus(500);
-    }
-  }
-    // user must be logged in and can only update their own profile
+try {
+    await data.users.changeLastName({_id: theUser._id}, userInfo.lastName);
+} catch (e) {
+    res.status(400).json({ error: "You cannot enter an empty last name. Please try something else." });
+}
 });
 
 router.get("/all", async (req,res) => {
