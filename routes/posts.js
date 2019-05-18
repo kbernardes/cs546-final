@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
     return;
   }
 
-  if (!postInfo.author) {
+  if (!postInfo.Name) {
     res.status(400).json({ error: "You must provide an author for the post" });
     return;
   }

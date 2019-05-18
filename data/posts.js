@@ -67,6 +67,19 @@ async function getPostsByUser(username) {
     }
     return post;
 }
+async function getPostsByThread(thread) {
+    if (!thread)
+    {
+        throw "You must provide a thread to search for."
+    }
+    const postCollection = await posts();
+    const post = await postCollection.find({ thread: String(thread) }).toArray();
+    if (post === null)
+    {
+        throw "This thread is empty."
+    }
+    return post;
+}
 
 /*async function getAllPosts() 
 {
@@ -166,6 +179,7 @@ module.exports = {
     addPost,
     getPostById,
     getPostsByUser,
+    getPostsByThread,
     deletePostById,
     editPost
 }
