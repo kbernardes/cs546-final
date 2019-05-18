@@ -33,13 +33,33 @@ async function createUser(username, password, email, firstName, lastName)
     const userCollection = await users();
 
     const user = await this.findUser(username);
-    console.log("working2");
 
     if (user) {
-        console.log("fail2");
         return false;
     }
 
+    return users().then(userCollection => {
+        let newUser = {
+            username: username,
+            hashedPassword: hashedPassword,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            _id: uuid.v4(),
+            sessionID: undefined
+        };
+  
+        return userCollection
+          .insertOne(newUser)
+          .then(newInsertInformation => {
+            return newInsertInformation.insertedId;
+          })
+          .then(newId => {
+            return this.get(newId);
+          });
+      });
+
+/*
     const newId = uuid.v4();
 
     let newUser = {
@@ -51,8 +71,6 @@ async function createUser(username, password, email, firstName, lastName)
         _id: newId,
         sessionID: undefined
     };
-    console.log(newUser);
-    console.log("working3");
     return userCollection.insertOne(newUser).then(newInsertInformation => 
         {
             return newInsertInformation.insertedId;
@@ -60,7 +78,7 @@ async function createUser(username, password, email, firstName, lastName)
         .then(newId => {
             return this.getUserById(newId);
         });
-
+*/
     /*const insertInfo = await userCollection.insertOne(newUser);
     if (insertInfo.insertedCount === 0)
     {
@@ -264,14 +282,11 @@ async function findUser(username) {
     {
         throw "You must provide a username."
     }
-    console.log("working1");
     const user = await userCollection.findOne({ username: username })
-    console.log(user);
     if (user === null) {
         console.log("fail1");
         return false;
     }
-    console.log(user);
     return user;
 }
 
