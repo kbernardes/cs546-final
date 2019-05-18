@@ -43,6 +43,7 @@ router.get("/signup", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
+    const userCollection = await users();
     const username = req.body.username;
     const password = req.body.password;
     const firstName = req.body.firstName;
@@ -53,7 +54,11 @@ router.post("/signup", async (req, res) => {
     if(useralready === false){
         const user = await data.users.createUser(username, password, email, firstName, lastName);
         req.session.sessionID = uuid.v4();
-        user.sessionID = req.session.sessionID;
+        const updateSID = {
+            $set: {sessionID: req.session.sessionID}
+        };
+        console.log(user);
+        await userCollection.updateOne({ _id: user._id }, updateSID);
         res.redirect("/forums");
     }
     else{
