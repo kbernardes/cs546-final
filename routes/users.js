@@ -3,8 +3,21 @@ const router = express.Router();
 const data = require("../data");
 const uuid = require("node-uuid");  
 
+async function authTest(req) {
+    if ((req.session.sessionID === undefined) || (!req.session.sessionID) || (req.session.sessionID !== (await usersData.findBySessionID(req.session.sessionID)).sessionID)) {
+      return false;
+  } 
+    else
+      return true;
+  }
+
 router.get("/", async (req, res) => {
-    res.render("frontpage");
+    if (await authTest(req)) {
+        res.render("loggedin-frontpage");
+    }
+    else {
+        res.render("frontpage");
+    }
 });
 
 router.get("/login", async (req, res) => {
