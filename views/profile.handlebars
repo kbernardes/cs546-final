@@ -1,13 +1,14 @@
 <main>
 <head>
     <meta charset="utf-8">
-    <title>{{user.username}}</title>
+    <title>{{user.username}}'s Profile</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
     <br>
-        <h1>{{user.firstName}} {{lastName}}</h1>
-        <h2>{{user.wins}}</h2>
+        <h1>{{user.username}}'s Profile</h1>
+        <h2>{{user.firstName}} {{lastName}}</h2>
+        <h2>{{user.wins}} win(s)</h2>
     </br>
     <div id = "threads">
         {{#each threads}}
@@ -15,7 +16,7 @@
         {{/each}}
     </div>
         <br>
-    <a href="/forums">back to front page</a>
+    <a href="/forums">Back to main page</a>
     </br>
 </body>
 </main>

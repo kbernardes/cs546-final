@@ -1,24 +1,23 @@
 <body>
 <article class="new-information">
-  <h1>Update your information</h1>
+  <h1>Update Your Information</h1>
+  <h3>If you'd like to update any of your info, fill in what you want to change it to and press submit at the bottom.</h3>
   <form  id="updateinfo-form" action="/infochange" method="POST">
         <p>Username: {{user.username}} </p>
+    <div class="form-group">
+        <Input type="text" id="username" name="newusername" placeholder="New username?" class="form-control">
+    </div>
+    <p>Name: {{user.firstName}} {{user.lastName}}</p>
+    <div class="form-group">
+        <input type="firstName" id="firstName" class="form-control" placeholder="New first name?" name="firstName" required>
+    </div>
+    <br>
+    <div class="form-group">
+        <input type="lastName" id="lastName" class="form-control" placeholder="New last name?" name="lastName" required>
+    </div>
         <p>Wins: {{user.wins}}</p>
     <div class="form-group">
-        <Input type="text" id="username" name="newusername" placeholder="new username?" class="form-control">
-    </div>
-        <p>Password: {{ user.password }}</p>
-    <div class="form-group">
-        <Input type="text" id="password" name="newpassword" placeholder="new password?" class="form-control">
-    </div>
-        <p>Name: {{user.firstName}} {{user.lastName}}</p>
-    <br>
-    <div class="form-group">
-        <input type="firstName" id="firstName" class="form-control" placeholder="new first name?" name="firstName" required>
-    </div>
-    <br>
-    <div class="form-group">
-        <input type="lastName" id="lastName" class="form-control" placeholder="new last name?" name="lastName" required>
+        <Input type="text" id="password" name="newpassword" placeholder="New password?" class="form-control">
     </div>
     <br>
     <div class="form-group">
@@ -28,6 +27,6 @@
     <br>
     {{error}}
     </br>
-    <a href="/frontpage">back to front page</a>
+    <a href="/frontpage">Back to main page</a>
     </br>
 </body>

@@ -72,14 +72,7 @@ router.get("/logout", async(req, res) => {
 });
 
 router.get("/profile/:username", async (req, res) => {
-    if (username === req.session.username)
-    {
-        res.redirect("/infochange");
-    }
-    else
-    {
-        res.redirect("/profile");
-    }
+    res.redirect("/profile");
     // renders different file if user is accessing their own 
     //res.redirect("/users");
 });
