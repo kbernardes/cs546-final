@@ -49,6 +49,7 @@ router.post("/signup", async (req, res) => {
     const lastName = req.body.lastName;
     const email = req.body.email;
     const useralready = await data.users.findUser(username);
+    console.log(useralready);
     if(useralready === false){
         const user = await data.users.createUser(username, password, email, firstName, lastName);
         req.session.sessionID = uuid.v4();
@@ -72,12 +73,15 @@ router.get("/logout", async(req, res) => {
 });
 
 router.get("/profile/:username", async (req, res) => {
-    res.redirect("/profile");
+    let user = await users.findUser(username);
+    res.render("profile", {data: user});
     // renders different file if user is accessing their own 
     //res.redirect("/users");
 });
 
 router.put("/profile/:username", async (req, res) => {
+    let user = await users.userSID(req.session.sessionID);
+    res.render("infochange", {data: user});
     const userInfo = req.body;
     let theUser = await data.users.findUser(username);
 
