@@ -94,9 +94,10 @@ router.put("/profile/:username", async (req, res) => {
   }
 
   try {
-      await data.users.changeUsername({_id: theUser._id}, userInfo.username);
+      if(userInfo.username != Null)
+        await data.users.changeUsername({_id: theUser._id}, userInfo.username);  
   } catch (e) {
-      res.status(400).json({ error: "You either entered an empty username or tried a name that is already taken. Please try something else." });
+      res.status(400).json({ error: "That name that is already taken. Please try something else." });
   }
 
   /*try {
@@ -107,21 +108,24 @@ router.put("/profile/:username", async (req, res) => {
   }*/
 
   try {
-    await data.users.changePassword({_id: theUser._id}, userInfo.password);
+    if(userInfo.password != Null)
+        await data.users.changePassword({_id: theUser._id}, userInfo.password);
 } catch (e) {
-    res.status(400).json({ error: "You cannot enter an empty password. Please try something else." });
+    res.status(400).json({ error: "You entered an invalid password. Please try something else." });
 }
 
 try {
-    await data.users.changeFirstName({_id: theUser._id}, userInfo.firstName);
+    if(userInfo.firstName != Null)
+        await data.users.changeFirstName({_id: theUser._id}, userInfo.firstName);
 } catch (e) {
-    res.status(400).json({ error: "You cannot enter an empty first name. Please try something else." });
+    res.status(400).json({ error: "You entered an invalid first name. Please try something else." });
 }
 
 try {
-    await data.users.changeLastName({_id: theUser._id}, userInfo.lastName);
+    if(userInfo.lastName != Null)
+        await data.users.changeLastName({_id: theUser._id}, userInfo.lastName);
 } catch (e) {
-    res.status(400).json({ error: "You cannot enter an empty last name. Please try something else." });
+    res.status(400).json({ error: "You entered an invalid last name. Please try something else." });
 }
 });
 
