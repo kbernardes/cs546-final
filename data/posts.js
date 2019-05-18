@@ -18,7 +18,8 @@ async function addPost(username, content)
 
     let newPost = {
         username: username,
-        content: content
+        content: content,
+        thread: thread
     };
 
     const insertInfo = await postCollection.insertOne(newPost);
