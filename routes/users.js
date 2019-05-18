@@ -71,3 +71,5 @@ router.get("/profile/:username", async (req, res) => {
 router.put("/profile/:username", async (req, res) => {
     // user must be logged in and can only update their own profile
 });
+
+module.exports = router;

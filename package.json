@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":  "app.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/KyleBernardes/cs546-final/issues"
   },
-  "homepage": "https://github.com/KyleBernardes/cs546-final#readme"
+  "homepage": "https://github.com/KyleBernardes/cs546-final#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.0",
+    "express-handlebars": "^3.1.0",
+    "express-session": "^1.16.1",
+    "node-uuid": "^1.4.8"
+  }
 }
