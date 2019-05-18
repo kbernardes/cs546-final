@@ -2,7 +2,8 @@ const bcrypt = require("bcrypt");
 const mongo = require("mongodb");
 const mongoCollections = require("./collections");
 const users = mongoCollections.users;
-const uuid = require("node-uuid");  
+const uuid = require("node-uuid");
+const threads = require("./threads");
 
 async function createUser(username, password, email, firstName, lastName)
 {
@@ -64,6 +65,14 @@ async function createUser(username, password, email, firstName, lastName)
     }*/
 }
 
+async function getAllUsers() 
+{
+    const userCollection = await users();
+    const users = require("./users");
+    const usersAll = await userCollection.find({}).toArray();
+    return usersAll;
+}
+
 async function getAllPosts() 
 {
     const userCollection = await users();
@@ -86,7 +95,6 @@ async function getAllPosts()
 async function getAllThreads() 
 {
     const userCollection = await users();
-    const threads = require("./threads");
     const usersAll = await userCollection.find({}).toArray();
     let userThreads = [];
 
@@ -317,5 +325,6 @@ module.exports = {
     changeFirstName,
     changeLastName,
     changePassword,
-    createUser
+    createUser,
+    getAllUsers
 };
