@@ -1,5 +1,5 @@
 body {
-    background-color: rgba(252, 8, 8, 0.856);
+    background-color: #e6e6e6;
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -39,11 +39,15 @@ a:hover {
 }
 
 button[type=submit] {
-    background-color: #1d6bd0;
+    background-color: #e63333;
     border: none;
     color: white;
     padding: 10px 20px;
     cursor: pointer;
+}
+
+#login-block {
+    margin: 0 auto;
 }
 
 .form-control {
