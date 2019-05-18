@@ -15,16 +15,16 @@ async function authTest(req) {
 
 router.get("/", async (req, res) => {
   if (await authTest(req)) {
-      res.render("loggedin-frontpage", {user: await data.users.userSID(req.session.sessionID)});
+      res.render("loggedin-frontpage", {user: await data.users.userSID(req.session.sessionID), forums: data.posts.forums});
   }
   else {
-      res.render("frontpage");
+      res.render("frontpage", {forums: data.posts.forums});
   }
 });
 
 router.get("/:forumName/:threadId", async (req, res) => { // access a thread
   try {
-    const threads = await threadData.getThreadById(req.params.id);
+    const threads = await threadData.getThreadById(req.params.threadId);
     res.json(threads);
   } catch (e) {
     res.status(404).json({ error: "Thread not found." });

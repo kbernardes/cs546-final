@@ -172,6 +172,10 @@ return await this.getThreadById(id);
     return await this.getPostById(id);
 }*/
 
+async function getThreadsByForum (forumName) {
+    
+}
+
 module.exports = {
     createThread,
     getThreadById,

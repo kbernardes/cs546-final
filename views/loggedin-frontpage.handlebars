@@ -7,16 +7,16 @@
     <header>
         <h1>Front Page</h1>
         <ul>
-            <a href="/users">Home</a>
+            <a href="/forums">Home</a>
             <a href="/users/profile/{{user.username}}">{{user.username}}</a>
             <a href="/users/logout">Logout</a>
         </ul>
     </header>
-    <div id = "frontpagethreads">
-    {{#each nav}}
-        <a href="/thread/{{../permalink}}#{{id}}">{{thread.title}}</a>
-        <h1>{{thread.poster.username}}</h1>
-        <h2>{{thread.poster.wins}}</h2>
+    <ul id = "forums-list">
+    {{#each forums}}
+    <li>
+        <a id="forum-items" href="/forums/{{this.url}}">{{this.title}}</a>
+    </li>
     {{/each}}
-    </div>
+    </ul>
 </body>

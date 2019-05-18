@@ -7,18 +7,22 @@ const mongo = require("mongodb");
 let forums = [
     {
         title: "Mafia Game Signups",
+        url: "mafia-game-signups",
         threads: []    
     },
     {
         title: "Ongoing Games",
+        url: "ongoing-games",
         threads: []
     },
     {
         title: "Game Discussion",
+        url: "game-discussion",
         threads: []
     },
     {
         title: "General Discussion",
+        url: "general-discussion",
         threads: []
     }
 ]
@@ -201,5 +205,6 @@ module.exports = {
     getPostsByUser,
     getPostsByThread,
     deletePostById,
-    editPost
+    editPost,
+    forums
 }
