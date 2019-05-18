@@ -26,7 +26,7 @@ router.get("/:forumName", async (req, res) => {
     const threads = await threadData.getThreadsByForum(req.params.forumName);
     res.render("forum", {forums: postData.forums, threads: threads})
   } catch (e) {
-    console.log("error");
+    res.status(404).json({ error: "Threads not found." });
   }
 })
 
