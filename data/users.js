@@ -32,9 +32,11 @@ async function createUser(username, password, email, firstName, lastName)
 
     const userCollection = await users();
 
-    const user = this.findUser(username);
+    const user = await this.findUser(username);
+    console.log("working2");
 
     if (user) {
+        console.log("fail2");
         return false;
     }
 
@@ -42,14 +44,15 @@ async function createUser(username, password, email, firstName, lastName)
 
     let newUser = {
         username: username,
-        password: hashedPassword,
+        hashedPassword: hashedPassword,
         email: email,
         firstName: firstName,
         lastName: lastName,
         _id: newId,
         sessionID: undefined
     };
-
+    console.log(newUser);
+    console.log("working3");
     return userCollection.insertOne(newUser).then(newInsertInformation => 
         {
             return newInsertInformation.insertedId;
@@ -68,7 +71,6 @@ async function createUser(username, password, email, firstName, lastName)
 async function getAllUsers() 
 {
     const userCollection = await users();
-    const users = require("./users");
     const usersAll = await userCollection.find({}).toArray();
     return usersAll;
 }
@@ -262,13 +264,14 @@ async function findUser(username) {
     {
         throw "You must provide a username."
     }
-
+    console.log("working1");
     const user = await userCollection.findOne({ username: username })
-
+    console.log(user);
     if (user === null) {
+        console.log("fail1");
         return false;
     }
-
+    console.log(user);
     return user;
 }
 

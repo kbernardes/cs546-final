@@ -47,9 +47,10 @@ router.post("/signup", async (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const email = req.body.email;
-
+    console.log(username);
+    console.log(typeof username);
     const user = await data.users.createUser(username, password, email, firstName, lastName);
-    
+    console.log("route1");
     req.session.sessionID = uuid.v4();
     user.sessionID = req.session.sessionID;
     res.redirect("/users" );
@@ -64,7 +65,7 @@ router.get("/logout", async(req, res) => {
 
 router.get("/profile/:username", async (req, res) => {
     // renders different file if user is accessing their own 
-    res.render("profile");
+    res.render("profile", {user: user});
 });
 
 router.put("/profile/:username", async (req, res) => {
@@ -72,7 +73,9 @@ router.put("/profile/:username", async (req, res) => {
 });
 
 router.get("/all", async (req,res) => {
-   data.users.ge 
+   const allUsers = await data.users.getAllUsers();
+   console.log(allUsers);
+   res.render("login");
 });
 
 module.exports = router;
