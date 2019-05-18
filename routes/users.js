@@ -15,7 +15,7 @@ async function authTest(req) {
 
 router.get("/", async (req, res) => {
     if (await authTest(req)) {
-        res.render("loggedin-frontpage");
+        res.render("loggedin-frontpage", {user: await data.users.userSID(req.session.sessionID)});
     }
     else {
         res.render("frontpage");
@@ -51,7 +51,7 @@ router.post("/login", async (req, res) => {
     const updateSID = {
         $set: {sessionID: req.session.sessionID}
     };
-    await userCollection.updateOne({ _id: user.id }, updateSID);
+    await userCollection.updateOne({ _id: user._id }, updateSID);
     res.redirect("/users");
 });
 

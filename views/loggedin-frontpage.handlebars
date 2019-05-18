@@ -9,10 +9,9 @@
         <ul>
             <a href="/users">Home</a>
             <a href="/users/profile/{{user.username}}">{{user.username}}</a>
-            <a href="/users/signout">Signout</a>
+            <a href="/users/logout">Logout</a>
         </ul>
     </header>
-    <a href="/users/profile/{{user.username}}">{{user.username}}</a>
     <div id = "frontpagethreads">
     {{#each nav}}
         <a href="/thread/{{../permalink}}#{{id}}">{{thread.title}}</a>

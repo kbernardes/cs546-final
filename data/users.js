@@ -153,7 +153,7 @@ async function userSID(sessionID)
     }
     const userCollection = await users();
     const user = await userCollection.findOne({ sessionID: sessionID });
-    console.log("User with SID: " + user);
+    //console.log("User with SID: " + user);
     if (!user) {
         return false;
     }
