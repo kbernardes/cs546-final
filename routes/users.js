@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const data = require("../data");
 const uuid = require("node-uuid");  
+const mongoCollections = require("../data/collections");
+const users = mongoCollections.users;
 
 async function authTest(req) {
-    if ((req.session.sessionID === undefined) || (!req.session.sessionID) || (req.session.sessionID !== (await usersData.findBySessionID(req.session.sessionID)).sessionID)) {
+    if ((req.session.sessionID === undefined) || (!req.session.sessionID) || (req.session.sessionID !== (await data.users.userSID(req.session.sessionID)).sessionID)) {
       return false;
   } 
     else
@@ -26,6 +28,7 @@ router.get("/login", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+    const userCollection = await users();
     const username = req.body.username;
     const password = req.body.password;
 
@@ -45,7 +48,10 @@ router.post("/login", async (req, res) => {
     }
 
     req.session.sessionID = uuid.v4();
-    user.sessionID = req.session.sessionID;
+    const updateSID = {
+        $set: {sessionID: req.session.sessionID}
+    };
+    await userCollection.updateOne({ _id: user.id }, updateSID);
     res.redirect("/users");
 });
 
