@@ -20,9 +20,7 @@ async function createUser(username, password, email, firstName, lastName)
         throw "You must provide an email.";
     }
     if (!firstName || typeof firstName != "string")
-    {rstName;rstName;
-        const lastName = req.body.la
-        const lastName = req.body.la
+    {
         throw "You must provide a first name.";
     }
     if (!lastName || typeof lastName != "string")
