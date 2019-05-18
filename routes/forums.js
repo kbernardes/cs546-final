@@ -3,6 +3,7 @@ const router = express.Router();
 const data = require("../data");
 const postData = data.posts;
 const threadData = data.threads;
+const userData = data.users;
 
 async function authTest(req) {
   if ((req.session.sessionID === undefined) || (!req.session.sessionID) || (req.session.sessionID !== (await data.users.userSID(req.session.sessionID)).sessionID)) {
@@ -28,12 +29,33 @@ router.get("/:forumName", async (req, res) => {
   } catch (e) {
     res.status(404).json({ error: "Threads not found." });
   }
-})
+});
+
+router.get("/:forumName/new-thread", async (req, res) => { // access a thread
+  res.render("newThread");
+});
+
+router.post("/:forumName/new-thread", async (req, res) => {
+  const forum = await postData.getForumByURL(req.params.forumName).title;
+  const title = req.body.title;
+  const author = await userData.userSID(req.session.sessionID);
+  const newThread = await threadData.createThread(author.username, title, forum, req.body.content);
+  const newPost = await postData.addPost(author.username, req.body.content);
+
+  res.redirect("/forums/" + req.params.forumName + "/" + newThread._id);
+});
 
 router.get("/:forumName/:threadId", async (req, res) => { // access a thread
   try {
-    const threads = await threadData.getThreadById(req.params.threadId);
-    res.json(threads);
+    const thread = await threadData.getThreadById(req.params.threadId);
+    let postArray = [];
+    let authorArray = [];
+    for (let i = 0; i < thread.posts.length; i++) {
+      postArray[i] = await postData.getPostById(thread.posts[i]);
+      authorArray[i] = await userData.findUser(postArray[i].username);
+    }
+
+    res.render("thread", {thread: thread, posts: postArray, author});
   } catch (e) {
     res.status(404).json({ error: "Thread not found." });
   }
