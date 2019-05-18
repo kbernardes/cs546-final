@@ -173,7 +173,7 @@ return await this.getThreadById(id);
 }*/
 
 async function getThreadsByForum (forumName) {
-    
+
 }
 
 module.exports = {
