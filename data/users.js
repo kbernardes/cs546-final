@@ -5,25 +5,6 @@ const users = mongoCollections.users;
 const uuid = require("node-uuid");
 const threads = require("./threads");
 
-let forums = [
-    {
-        title: "Mafia Game Signups",
-        threads: []    
-    },
-    {
-        title: "Ongoing Games",
-        threads: []
-    },
-    {
-        title: "Game Discussion",
-        threads: []
-    },
-    {
-        title: "General Discussion",
-        threads: []
-    }
-]
-
 async function createUser(username, password, email, firstName, lastName)
 {
     if (!username || typeof username != "string")

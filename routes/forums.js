@@ -2,132 +2,114 @@ const express = require("express");
 const router = express.Router();
 const data = require("../data");
 const postData = data.posts;
+const threadData = data.threads;
+const forumData = data.forums;
 
-router.get("/:id", async (req, res) => {
-  try {
-    const posts = await postData.getPostById(req.params.id);
-    res.json(posts);
-  } catch (e) {
-    res.status(404).json({ error: "Post not found." });
-  }
-});
+async function authTest(req) {
+  if ((req.session.sessionID === undefined) || (!req.session.sessionID) || (req.session.sessionID !== (await data.users.userSID(req.session.sessionID)).sessionID)) {
+    return false;
+} 
+  else
+    return true;
+}
 
 router.get("/", async (req, res) => {
-  try {
-    const postList = await postData.getAllPosts();
-    res.json(postList);
-  } catch (e) {
-    res.sendStatus(500);
+  if (await authTest(req)) {
+      res.render("loggedin-frontpage", {user: await data.users.userSID(req.session.sessionID)});
+  }
+  else {
+      res.render("frontpage");
   }
 });
 
-router.post("/", async (req, res) => {
-  const postInfo = req.body;
+router.get("/:forumName/:threadId", async (req, res) => { // access a thread
+  try {
+    const threads = await threadData.getThreadById(req.params.id);
+    res.json(threads);
+  } catch (e) {
+    res.status(404).json({ error: "Thread not found." });
+  }
+});
 
-  if (!postInfo) {
-    res.status(400).json({ error: "You must provide data to create a post" });
+router.post("/:forumName/:threadId", async (req, res) => {
+  const threadInfo = req.body;
+
+  if (!threadInfo) {
+    res.status(400).json({ error: "You must provide data to create a thread." });
     return;
   }
 
-  if (!postInfo.title) {
-    res.status(400).json({ error: "You must provide a title for the post" });
+  if (!threadInfo.title) {
+    res.status(400).json({ error: "You must provide a title for the thread." });
     return;
   }
 
-  if (!postInfo.author) {
-    res.status(400).json({ error: "You must provide an author for the post" });
-    return;
-  }
-
-  if (!postInfo.content) {
-    res.status(400).json({ error: "You must provide content for the post" });
+  if (!postInfo.forum) {
+    res.status(400).json({ error: "You must specify which forum to make the post in." });
     return;
   }
 
   try {
-    const newPost = await postData.addPost(
-      postInfo.title,
-      postInfo.author,
-      postInfo.content
+    const newThread = await threadData.createThread(
+      threadInfo.username,
+      threadInfo.title,
+      threadInfo.forum,
+      threadInfo.content
     );
-    res.json(newPost);
+    res.json(newThread);
   } catch (e) {
     res.sendStatus(500);
   }
 });
 
-router.put("/:id", async (req, res) => {
-  const postInfo = req.body;
+router.put("/:forumName/:threadId", async (req, res) => {
+  const threadInfo = req.body;
 
-  if (!postInfo) {
-    res.status(400).json({ error: "You must provide data to update a post" });
-    return;
-  }
-
-  if (!postInfo.newTitle && !postInfo.newContent) {
-    res.status(400).json({ error: "You must provide a title and/or content for the post" });
+  if (!threadInfo) {
+    res.status(400).json({ error: "You must provide data to update a thread title." });
     return;
   }
 
   try {
-    await postData.getPostById(req.params.id);
+    await threadData.editThread(req.params.id, threadInfo.newTitle);
   } catch (e) {
-    res.status(404).json({ error: "Post not found" });
+    res.status(404).json({ error: "Thread not found." });
     return;
-  }
-
-  if (!postInfo.newTitle)
-  {
-    try {
-        const updatedPost = await postData.updateContent(req.params.id, postInfo.newContent);
-        res.json(updatedPost);
-      } catch (e) {
-        res.sendStatus(500);
-      }
-  }
-
-  else if (!postInfo.newContent)
-  {
-    try {
-        const updatedPost = await postData.updateTitle(req.params.id, postInfo.newTitle);
-        res.json(updatedPost);
-      } catch (e) {
-        res.sendStatus(500);
-      }
-  }
-
-  else
-  {
-    try {
-        await postData.updateTitle(req.params.id, postInfo.newTitle);
-      } catch (e) {
-        res.sendStatus(500);
-      }
-
-    try {
-        const updatedPost = await postData.updateContent(req.params.id, postInfo.newContent);
-        res.json(updatedPost);
-        } catch (e) {
-        res.sendStatus(500);
-    }
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:forumName/:threadId", async (req, res) => {
   try {
-    await postData.getPostById(req.params.id);
+    await threadData.getThreadById(req.params.id);
   } catch (e) {
-    res.status(404).json({ error: "Post not found" });
+    res.status(404).json({ error: "Thread not found." });
     return;
   }
 
   try {
-    const post = await postData.removeById(req.params.id);
-    res.json(post)
+    const thread = await threadData.deleteThreadById(req.params.id);
+    res.json(thread)
   } catch (e) {
     res.sendStatus(500);
     return;
   }
 });
+
+/*router.get("/:forumName/:threadId", async (req, res) => { // access a thread
+  try {
+    const threads = await threadData.getThreadById(req.params.id);
+    res.json(threads);
+  } catch (e) {
+    res.status(404).json({ error: "Thread not found." });
+  }
+});
+
+
+try {
+  const updatedPost = await postData.updateContent(req.params.id, postInfo.newContent);
+  res.json(updatedPost);
+  } catch (e) {
+  res.sendStatus(500);
+}*/
 
 module.exports = router;
