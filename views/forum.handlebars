@@ -1,21 +1,21 @@
 <head>
     <meta charset="utf-8">
-    <title>Mafia Forum</title>
+    <title>{{forums.title}}</title>
     <link rel="stylesheet" href="/css/frontpage.css">
 </head>
 <body>
     <header>
         <ul>
-            <li><a href="/users">Home</a></li>
+            <li><a href="/forums">Home</a></li>
             <li><a href="/users/login">Login</a></li>
             <li><a href="/users/signup">Signup</a></li>
         </ul>
-        <h1>Front Page</h1>
+        <h1>{{forums.title}}</h1>
     </header>
-    <ul id = "forums-list">
-    {{#each forums}}
+    <ul id = "threads-list">
+    {{#each threads}}
     <li>
-        <a id="forum-items" href="/forums/{{forums.title}}">{{forums.title}}</a>
+        <a id="thread-items" href="/forums/{{forums.title}}/{{forums.threads}}">{{threads.title}}</a>
     </li>
     {{/each}}
     </ul>

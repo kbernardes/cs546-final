@@ -1,15 +1,17 @@
 <head>
     <meta charset="utf-8">
-    <title>{{thread.title}}</title>
+    <title>{{threads.title}}</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <div id = "threadposts">
-    {{#each nav}}
-        <a href="/newpost{{../permalink}}#{{id}}">{{thread.post.title}}</a>
-        <h1>{{thread.post.poster.username}}</h1>
-        <h2>{{thread.post.poster.wins}}</h2>
-        <p>{{thread.post.body}}</p>
+    <ul id = "posts-list">
+    {{#each posts}}
+        <li>
+            {{posts.title}}
+        </li>
+        <h1>{{author.username}}</h1>
+        <h2>{{author.wins}}</h2>
+        <p>{{posts.body}}</p>
     {{/each}}
-    </div>
+    </ul>
 </body>
