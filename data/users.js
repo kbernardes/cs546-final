@@ -7,6 +7,7 @@ const threads = require("./threads");
 
 async function createUser(username, password, email, firstName, lastName)
 {
+    console.log("here");
     if (!username || typeof username != "string")
     {
         throw "You must provide a username.";
@@ -30,9 +31,14 @@ async function createUser(username, password, email, firstName, lastName)
     const saltRounds = 16;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    console.log("working");
+
     const userCollection = await users();
 
+    console.log(userCollection);
+
     const user = await this.findUser(username);
+    console.log(user);
 
     if (user) {
         return false;
