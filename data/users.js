@@ -338,6 +338,7 @@ async function endSID(id){
 }
 
 async function findUser(username) {
+    try{
     const userCollection = await users();
     
     if (!username || typeof username != "string")
@@ -350,6 +351,10 @@ async function findUser(username) {
         return false;
     }
     return user;
+    }
+    catch(e){
+        throw "Can't find user";
+    }
 }
 
 async function checkPass(user, password)

@@ -59,7 +59,6 @@ router.post("/signup", async (req, res) => {
     if(useralready === false){
         try{
         const user = await data.users.createUser(username, password, email, firstName, lastName);
-            res.status(402).render("error", {information: "Could not create user."});
         console.log(user);
 
         await data.users.updateSID(user.id);
@@ -151,8 +150,14 @@ try {
 });
 
 router.get("/all", async (req,res) => {
+    try{
    const allUsers = await data.users.getAllUsers();
    console.log(allUsers);
+    }
+    catch(e)
+    {
+        res.status(400).json({error: "error getting all users"});
+    }
    res.render("login");
 });
 
