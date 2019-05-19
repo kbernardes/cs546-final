@@ -43,7 +43,11 @@ router.get("/signup", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
+    console.log("green");
     const userCollection = await users();
+    //const userCollection = data.users.getAllUsers;
+    //.then(null, error => { console.log('caught', error.message); });
+    console.log("blue");
     const username = req.body.username;
     const password = req.body.password;
     const firstName = req.body.firstName;
