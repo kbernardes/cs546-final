@@ -6,9 +6,23 @@ const mongoCollections = require("../data/collections");
 const usersData = require("../data/users");
 const users = mongoCollections.users;
 
+async function authTest(req) {
+    if ((req.session.sessionID === undefined) || (!req.session.sessionID) || (req.session.sessionID === (await data.users.userSID(req.session.sessionID)).sessionID)) {
+      return false;
+  } 
+    else {
+        return true;
+    }
+}
+
 router.get("/login", async (req, res) => {
     // check if user is signed in, redirect to / if they are
-    res.render("login");
+    if (await authTest(req)) {
+        res.redirect("/forums")
+    }
+    else {
+        res.render("login");
+    }
 });
 
 router.post("/login", async (req, res) => {
@@ -42,7 +56,12 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/signup", async (req, res) => {
-    res.render("signup");
+    if (await authTest(req)) {
+        res.redirect("/forums")
+    }
+    else {
+        res.render("signup");
+    }
 });
 
 router.post("/signup", async (req, res) => {
@@ -55,37 +74,36 @@ router.post("/signup", async (req, res) => {
     const lastName = req.body.lastName;
     const email = req.body.email;
     try{
-    const useralready = await data.users.findUser(username);
-    //console.log(useralready);
-    if(useralready === false){
-        try{
-        const user = await data.users.createUser(username, password, email, firstName, lastName);
-        console.log(user);
+        const useralready = await data.users.findUser(username);
+        //console.log(useralready);
+        if(useralready === false){
+            const user = await data.users.createUser(username, password, email, firstName, lastName);
+            console.log(user);
 
-        await data.users.updateSID(user.id);
-        res.redirect("/forums");
-        }
-        catch(e){
-            res.status(402).render("error", {information: "Username already taken, please try a different name"});
+            req.session.sessionID = uuid.v4();
+            await data.users.updateSID(user._id, req.session.sessionID);
+            res.redirect("/forums");
             return;
         }
-    }
+        else {
+            res.status(402).render("error", {information: "User already exists"});
+            return;
+        }
     } 
     catch(e){
         res.status(402).render("error", {information: "Error with checking database"});
         return;
     } 
-    res.status(402).render("error", {information: "Error with checking database"});
-    return;
-
 });
 
 router.get("/logout", async(req, res) => {
     
-    //req.session.sessionID = undefined;
+    req.session.regenerate(function (err) {
+        //req.session.auth = false;
+      });
     try{
         let user = await data.users.userSID(req.session.sessionID);
-        await data.users.endSID(user.id);
+        await data.users.endSID(user._id);
     }
     catch(e){
         res.status(400).json({ error: "Could not logout." });

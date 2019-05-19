@@ -31,12 +31,6 @@ async function createUser(username, password, email, firstName, lastName)
     const saltRounds = 16;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    console.log("working");
-
-    const userCollection = await users();
-
-    console.log(userCollection);
-
     const user = await this.findUser(username);
     console.log(user);
 
@@ -174,7 +168,7 @@ async function deleteUser(id)
         throw "You must provide an id to search for."
     }
     const userCollection = await users();
-    const result = await this.get(id);
+    const result = await this.findID(id);
     await posts.removeByUser(id);
     const deleteUser = await userCollection.removeOne(result);
     if (deleteUser.deletedCount === 0)
@@ -218,7 +212,7 @@ async function changeUsername(id, newName)
     {
         throw "The user does not exist and cannot be updated.";
     }
-    return await this.get(id);
+    return await this.findID(id);
 }
 
 async function changeFirstName(id, newName)
@@ -244,7 +238,7 @@ async function changeFirstName(id, newName)
     {
         throw "The user does not exist and cannot be updated.";
     }
-    return await this.get(id);
+    return await this.findID(id);
 }
 
 async function changeLastName(id, newName)
@@ -270,7 +264,7 @@ async function changeLastName(id, newName)
     {
         throw "The user does not exist and cannot be updated.";
     }
-    return await this.get(id);
+    return await this.findID(id);
 }
 
 async function changePassword(id, newPass)
@@ -298,7 +292,7 @@ async function changePassword(id, newPass)
     {
         throw "The user does not exist and cannot be updated.";
     }
-    return await this.get(id);
+    return await this.findID(id);
 }
 
 async function updateSID(id, sid){
@@ -309,7 +303,7 @@ async function updateSID(id, sid){
     }
     if (!sid)
         throw 'need new sid'
-        
+
     const updatedUser = {
         $set: {sessionID: sid}
     };
@@ -336,7 +330,7 @@ async function endSID(id){
     {
         throw "The user does not exist and cannot be updated.";
     }
-    return await this.get(id);
+    return await this.findID(id);
 }
 
 async function findUser(username) {
