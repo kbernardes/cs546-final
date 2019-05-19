@@ -55,7 +55,7 @@ router.post("/signup", async (req, res) => {
     const email = req.body.email;
     try{
     const useralready = await data.users.findUser(username);
-    console.log(useralready);
+    //console.log(useralready);
     if(useralready === false){
         try{
         const user = await data.users.createUser(username, password, email, firstName, lastName);
@@ -69,15 +69,12 @@ router.post("/signup", async (req, res) => {
             res.status(402).render("error", {information: "Username already taken, please try a different name"});
         }
     }
-    else{
-        res.status(402).render("error", {information: "Username already taken, please try a different name"});
-    }
     } 
     catch(e){
         res.status(402).render("error", {information: "Error with checking database"});
-
     } 
-    res.redirect("/forms");
+    res.status(402).render("error", {information: "Error with checking database"});
+
 });
 
 router.get("/logout", async(req, res) => {
@@ -102,10 +99,11 @@ router.get("/logout", async(req, res) => {
 });*/
 
 router.put("/profile/:username", async (req, res) => {
+    try{
     let user = await data.users.userSID(req.session.sessionID);
     res.render("infochange", {data: user});
     const userInfo = req.body;
-    let theUser = await data.users.findUser(username);
+    //let theUser = await data.users.findUser(username);
 
   if (!userInfo) {
     res.status(400).json({ error: "You must provide data to update a user's info." });
@@ -146,6 +144,10 @@ try {
 } catch (e) {
     res.status(400).json({ error: "You entered an invalid last name. Please try something else." });
 }
+    }
+    catch(e){
+        res.status(400).json({ error: "Could not find user by Session ID" }); 
+    }
 });
 
 router.get("/all", async (req,res) => {
