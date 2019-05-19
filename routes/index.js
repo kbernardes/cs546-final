@@ -6,7 +6,7 @@ const constructorMethod = app => {
   app.use("/forums", forumRoutes);
 
   app.use("*", (req, res) => {
-    res.render("/forums");
+    res.redirect("/forums");
   });
 };
 

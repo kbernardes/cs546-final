@@ -301,22 +301,24 @@ async function changePassword(id, newPass)
     return await this.get(id);
 }
 
-async function updateSID(id){
+async function updateSID(id, sid){
     const userCollection = await users();
-    if (!username)
+    if (!id)
     {
         throw "You must provide an id."
     }
-    const newSession = uuid.v4();
+    if (!sid)
+        throw 'need new sid'
+        
     const updatedUser = {
-        $set: {sessionID: newSession}
+        $set: {sessionID: sid}
     };
     const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
     if (updateInfo.modifiedCount === 0)
     {
         throw "The user does not exist and cannot be updated.";
     }
-    return await this.get(id);
+    return await this.findID(id);
 }
 
 async function endSID(id){
@@ -357,31 +359,35 @@ async function findUser(username) {
     }
 }
 
-async function checkPass(user, password)
+async function checkPass(username, password)
 {
-    if (!user || typeof user != "string")
+    if (!username || typeof username != "string")
     {
+        console.log('no user');
         throw "You must provide a user."
     }
     if (!password || typeof password != "string")
     {
+        console.log('no pass');
         throw "You must provide a password."
     }
     try
     {
-        var theUser = await findUser(user);
+        var theUser = await findUser(username);
     }
     catch(e)
     {
-        throw "The user could not be found.";
+        console.log("The user could not be found.");
     }
 
     if (await bcrypt.compare(password, theUser.hashedPassword))
     {
+        console.log('password good');
         return true;
     }
     else
     {
+        console.log('password not right');
         throw "The password was not correct.";
     }
 }

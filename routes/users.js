@@ -12,17 +12,17 @@ router.get("/login", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-    const userCollection = await usersData.getAllUsers();
+    //const userCollection = await usersData.getAllUsers();
     const username = req.body.username;
     const password = req.body.password;
 
     // Check that user exists
     try{
-    let user = await data.users.findUser(username);
-    if (user === false) {
-        res.status(401).render("error", {information: "Username not valid"});
-        return;
-        //res.redirect("/");
+        let user = await data.users.findUser(username);
+        if (user === false) {
+            res.status(401).render("error", {information: "Username not valid"});
+            return;
+            //res.redirect("/");
     }
     
     // Check if password is correct
@@ -30,12 +30,13 @@ router.post("/login", async (req, res) => {
     if (passChk === false) {
         res.status(401).render("error", {information: "Password incorrect"});
         return;
-    
     }
-    await data.users.updateSID(user.id);
+    req.session.sessionID = uuid.v4();
+    await data.users.updateSID(user._id, req.session.sessionID);
     }   
     catch(e){
-        res.status(401).render("error", {information: "Password incorrect"});
+        res.status(401).render("error", {information: "Login Error"});
+        return;
     }
     res.redirect("/forums");
 });
@@ -66,13 +67,16 @@ router.post("/signup", async (req, res) => {
         }
         catch(e){
             res.status(402).render("error", {information: "Username already taken, please try a different name"});
+            return;
         }
     }
     } 
     catch(e){
         res.status(402).render("error", {information: "Error with checking database"});
+        return;
     } 
     res.status(402).render("error", {information: "Error with checking database"});
+    return;
 
 });
 
@@ -85,28 +89,19 @@ router.get("/logout", async(req, res) => {
     }
     catch(e){
         res.status(400).json({ error: "Could not logout." });
+        return;
    
     }
     res.render("logout");
 });
-<<<<<<< HEAD
-/*
-router.get("/profile/:username", async (req, res) => {
-=======
 
 /*router.get("/profile/:username", async (req, res) => {
->>>>>>> 88da3c70ed3d2d17055d3868f2ff9b003c770f28
     let user = await users.findUser(username);
     res.render("profile", {data: user});
     // renders different file if user is accessing their own 
     //res.redirect("/users");
-<<<<<<< HEAD
-});
-*/
-=======
 });*/
 
->>>>>>> 88da3c70ed3d2d17055d3868f2ff9b003c770f28
 router.put("/profile/:username", async (req, res) => {
     try{
     let user = await data.users.userSID(req.session.sessionID);
@@ -124,6 +119,7 @@ router.put("/profile/:username", async (req, res) => {
         await data.users.changeUsername({_id: theUser._id}, userInfo.username);  
   } catch (e) {
       res.status(400).json({ error: "That name that is already taken. Please try something else." });
+      return;
   }
 
   /*try {
@@ -138,6 +134,7 @@ router.put("/profile/:username", async (req, res) => {
         await data.users.changePassword({_id: theUser._id}, userInfo.password);
 } catch (e) {
     res.status(400).json({ error: "You entered an invalid password. Please try something else." });
+    return;
 }
 
 try {
@@ -145,6 +142,7 @@ try {
         await data.users.changeFirstName({_id: theUser._id}, userInfo.firstName);
 } catch (e) {
     res.status(400).json({ error: "You entered an invalid first name. Please try something else." });
+    return;
 }
 
 try {
@@ -152,10 +150,12 @@ try {
         await data.users.changeLastName({_id: theUser._id}, userInfo.lastName);
 } catch (e) {
     res.status(400).json({ error: "You entered an invalid last name. Please try something else." });
+    return;
 }
     }
     catch(e){
         res.status(400).json({ error: "Could not find user by Session ID" }); 
+        return;
     }
 });
 
@@ -167,6 +167,7 @@ router.get("/all", async (req,res) => {
     catch(e)
     {
         res.status(400).json({error: "error getting all users"});
+        return;
     }
    res.render("login");
 });
