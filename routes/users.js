@@ -17,6 +17,7 @@ router.post("/login", async (req, res) => {
     const password = req.body.password;
 
     // Check that user exists
+    try{
     let user = await data.users.findUser(username);
     if (user === false) {
         res.status(401).render("error", {information: "Username not valid"});
@@ -29,13 +30,13 @@ router.post("/login", async (req, res) => {
     if (passChk === false) {
         res.status(401).render("error", {information: "Password incorrect"});
         return;
+    
     }
-
-    req.session.sessionID = uuid.v4();
-    const updateSID = {
-        $set: {sessionID: req.session.sessionID}
-    };
-    await userCollection.updateSID({ _id: user._id }, updateSID);
+    await data.users.updateSID(user.id);
+    }   
+    catch(e){
+        res.status(401).render("error", {information: "Password incorrect"});
+    }
     res.redirect("/forums");
 });
 
@@ -52,28 +53,38 @@ router.post("/signup", async (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const email = req.body.email;
+    try{
     const useralready = await data.users.findUser(username);
     console.log(useralready);
     if(useralready === false){
         try{
         const user = await data.users.createUser(username, password, email, firstName, lastName);
+            res.status(402).render("error", {information: "Could not create user."});
         console.log(user);
+
         await data.users.updateSID(user.id);
         res.redirect("/forums");
         }
         catch(e){
-            res.status(402).render("error", {information: "Could not create user"});
+            res.status(402).render("error", {information: "Username already taken, please try a different name"});
         }
     }
     else{
         res.status(402).render("error", {information: "Username already taken, please try a different name"});
     }
+    } 
+    catch(e){
+        res.status(402).render("error", {information: "Error with checking database"});
+
+    } 
+    res.redirect("/forms");
 });
 
 router.get("/logout", async(req, res) => {
-    let user = await data.users.userSID(req.session.sessionID);
+    
     //req.session.sessionID = undefined;
     try{
+        let user = await data.users.userSID(req.session.sessionID);
         await data.users.endSID(user.id);
     }
     catch(e){
@@ -91,7 +102,7 @@ router.get("/logout", async(req, res) => {
 });*/
 
 router.put("/profile/:username", async (req, res) => {
-    let user = await users.userSID(req.session.sessionID);
+    let user = await data.users.userSID(req.session.sessionID);
     res.render("infochange", {data: user});
     const userInfo = req.body;
     let theUser = await data.users.findUser(username);
