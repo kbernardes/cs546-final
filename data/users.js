@@ -7,6 +7,7 @@ const threads = require("./threads");
 
 async function createUser(username, password, email, firstName, lastName)
 {
+    console.log("here");
     if (!username || typeof username != "string")
     {
         throw "You must provide a username.";
@@ -30,9 +31,14 @@ async function createUser(username, password, email, firstName, lastName)
     const saltRounds = 16;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    console.log("working");
+
     const userCollection = await users();
 
+    console.log(userCollection);
+
     const user = await this.findUser(username);
+    console.log(user);
 
     if (user) {
         return false;
@@ -295,19 +301,60 @@ async function changePassword(id, newPass)
     return await this.get(id);
 }
 
-async function findUser(username) {
+async function updateSID(id){
     const userCollection = await users();
+    if (!username)
+    {
+        throw "You must provide an id."
+    }
+    const newSession = uuid.v4();
+    const updatedUser = {
+        $set: {sessionID: newSession}
+    };
+    const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
+    if (updateInfo.modifiedCount === 0)
+    {
+        throw "The user does not exist and cannot be updated.";
+    }
+    return await this.get(id);
+}
+
+async function endSID(id){
+    const userCollection = await users();
+    if (!id)
+    {
+        throw "You must provide an id."
+    }
+    const newSession = undefined;
+    const updatedUser = {
+        $set: {sessionID: newSession}
+    };
+    const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
+    if (updateInfo.modifiedCount === 0)
+    {
+        throw "The user does not exist and cannot be updated.";
+    }
+    return await this.get(id);
+}
+
+async function findUser(username) {
     
+    const userCollection = await users();
     if (!username || typeof username != "string")
     {
         throw "You must provide a username."
     }
+    try{
     const user = await userCollection.findOne({ username: username })
     if (user === null) {
         console.log("fail1");
         return false;
     }
     return user;
+    }
+    catch(e){
+        throw "Can't find user";
+    }
 }
 
 async function checkPass(user, password)
@@ -362,6 +409,8 @@ module.exports = {
     getAllThreads,
     getUserById,
     userSID,
+    updateSID,
+    endSID,
     deleteUser,
     changeUsername,
     changeFirstName,
