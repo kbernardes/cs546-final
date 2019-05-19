@@ -76,14 +76,14 @@ router.get("/logout", async(req, res) => {
     });
     res.render("logout");
 });
-
+/*
 router.get("/profile/:username", async (req, res) => {
     let user = await users.findUser(username);
     res.render("profile", {data: user});
     // renders different file if user is accessing their own 
     //res.redirect("/users");
 });
-
+*/
 router.put("/profile/:username", async (req, res) => {
     let user = await users.userSID(req.session.sessionID);
     res.render("infochange", {data: user});

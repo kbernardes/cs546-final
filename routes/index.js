@@ -6,7 +6,7 @@ const constructorMethod = app => {
   app.use("/forums", forumRoutes);
 
   app.use("*", (req, res) => {
-    res.sendStatus(404);
+    res.render("/forums");
   });
 };
 
