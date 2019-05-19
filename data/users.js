@@ -338,13 +338,13 @@ async function endSID(id){
 }
 
 async function findUser(username) {
-    try{
-    const userCollection = await users();
     
+    const userCollection = await users();
     if (!username || typeof username != "string")
     {
         throw "You must provide a username."
     }
+    try{
     const user = await userCollection.findOne({ username: username })
     if (user === null) {
         console.log("fail1");
