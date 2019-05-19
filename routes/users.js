@@ -121,24 +121,25 @@ router.get("/logout", async(req, res) => {
 });*/
 
 router.put("/profile/:username", async (req, res) => {
-    try{
-    let user = await data.users.userSID(req.session.sessionID);
-    res.render("infochange", {data: user});
-    const userInfo = req.body;
-    //let theUser = await data.users.findUser(username);
+    try {
+        let user = await data.users.userSID(req.session.sessionID);
+        res.render("infochange", {data: user});
+        const userInfo = req.body;
+        //let theUser = await data.users.findUser(username);
 
-  if (!userInfo) {
-    res.status(400).json({ error: "You must provide data to update a user's info." });
-    return;
-  }
+        if (!userInfo) {
+            res.status(400).json({ error: "You must provide data to update a user's info." });
+            return;
+        }
 
-  try {
-      if(userInfo.username != null)
-        await data.users.changeUsername({_id: theUser._id}, userInfo.username);  
-  } catch (e) {
-      res.status(400).json({ error: "That name that is already taken. Please try something else." });
-      return;
-  }
+    
+        if(userInfo.username != null)
+            await data.users.changeUsername({_id: theUser._id}, userInfo.username);  
+    
+    } catch (e) {
+        res.status(400).json({ error: "That name that is already taken. Please try something else." });
+        return;
+    }
 
   /*try {
     await postData.getPostById(req.params.id);

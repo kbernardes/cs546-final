@@ -1,6 +1,6 @@
 # Mafia Forum
 Hello, we would like to introduce you to our mafia forum. 
-To use the program, you will need the following dependencies:
+To use the program, you will need the following dependencies (all included in the package.json):
 bcrypt
 cookie-parser
 express-handlebars
