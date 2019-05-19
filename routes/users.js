@@ -3,6 +3,7 @@ const router = express.Router();
 const data = require("../data");
 const uuid = require("node-uuid");  
 const mongoCollections = require("../data/collections");
+const usersData = require("../data/users");
 const users = mongoCollections.users;
 
 router.get("/login", async (req, res) => {
@@ -11,7 +12,7 @@ router.get("/login", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-    const userCollection = await users();
+    const userCollection = await usersData.getAllUsers();
     const username = req.body.username;
     const password = req.body.password;
 
@@ -34,7 +35,7 @@ router.post("/login", async (req, res) => {
     const updateSID = {
         $set: {sessionID: req.session.sessionID}
     };
-    await userCollection.updateOne({ _id: user._id }, updateSID);
+    await userCollection.updateSID({ _id: user._id }, updateSID);
     res.redirect("/forums");
 });
 
@@ -43,11 +44,9 @@ router.get("/signup", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
-    console.log("green");
-    const userCollection = await users();
+    //const userCollection = await users();
     //const userCollection = data.users.getAllUsers;
     //.then(null, error => { console.log('caught', error.message); });
-    console.log("blue");
     const username = req.body.username;
     const password = req.body.password;
     const firstName = req.body.firstName;
@@ -56,14 +55,15 @@ router.post("/signup", async (req, res) => {
     const useralready = await data.users.findUser(username);
     console.log(useralready);
     if(useralready === false){
+        try{
         const user = await data.users.createUser(username, password, email, firstName, lastName);
-        req.session.sessionID = uuid.v4();
-        const updateSID = {
-            $set: {sessionID: req.session.sessionID}
-        };
         console.log(user);
-        await userCollection.updateOne({ _id: user._id }, updateSID);
+        await data.users.updateSID(user.id);
         res.redirect("/forums");
+        }
+        catch(e){
+            res.status(402).render("error", {information: "Could not create user"});
+        }
     }
     else{
         res.status(402).render("error", {information: "Username already taken, please try a different name"});
@@ -73,11 +73,13 @@ router.post("/signup", async (req, res) => {
 router.get("/logout", async(req, res) => {
     let user = await data.users.userSID(req.session.sessionID);
     //req.session.sessionID = undefined;
-    user.sessionID = undefined;
-    req.session.regenerate(function (err) 
-    {
-        req.session.sessionID = "";
-    });
+    try{
+        await data.users.endSID(user.id);
+    }
+    catch(e){
+        res.status(400).json({ error: "Could not logout." });
+   
+    }
     res.render("logout");
 });
 

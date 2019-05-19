@@ -301,6 +301,42 @@ async function changePassword(id, newPass)
     return await this.get(id);
 }
 
+async function updateSID(id){
+    const userCollection = await users();
+    if (!username)
+    {
+        throw "You must provide an id."
+    }
+    const newSession = uuid.v4();
+    const updatedUser = {
+        $set: {sessionID: newSession}
+    };
+    const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
+    if (updateInfo.modifiedCount === 0)
+    {
+        throw "The user does not exist and cannot be updated.";
+    }
+    return await this.get(id);
+}
+
+async function endSID(id){
+    const userCollection = await users();
+    if (!id)
+    {
+        throw "You must provide an id."
+    }
+    const newSession = undefined;
+    const updatedUser = {
+        $set: {sessionID: newSession}
+    };
+    const updateInfo = await userCollection.updateOne({ _id: id }, updatedUser);
+    if (updateInfo.modifiedCount === 0)
+    {
+        throw "The user does not exist and cannot be updated.";
+    }
+    return await this.get(id);
+}
+
 async function findUser(username) {
     const userCollection = await users();
     
@@ -368,6 +404,8 @@ module.exports = {
     getAllThreads,
     getUserById,
     userSID,
+    updateSID,
+    endSID,
     deleteUser,
     changeUsername,
     changeFirstName,
